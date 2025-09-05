@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gyümölcslé</title>
+    <style>
+        body{
+            background: cornflowerblue;
+        }
+        #urlap{
+            width: 600px;
+            margin: 0px auto;
+            background: skyblue;
+            border: 1px solid black;
+            padding: 25px;
+
+
+
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            
+        }
+        #urlap div{
+            text-align: center;
+        }
+        .valaszt {
+            width: 100px;
+        }
+        #gomb{
+            width: 80px;
+        }
+        #lista{
+            width: 170px;
+            margin-top: 5px;
+        }
+    </style>
+    <script>
+        function onSelectGyumolcs(){
+            let gyumi = "..//oldal2/icons/" + document.getElementById("gyumolcs").value + ".png";
+            document.getElementById("gyumikep").src = gyumi;
+        }
+        function onSelectedMeret() {
+            let a = "..//oldal2/icons/" + document.getElementById("meret").value + ".png"
+            document.getElementById("meretkep").src = a
+        }
+        function onRendelClick() {
+            let gi = document.getElementById("gyumolcs").selectedIndex;
+            let mi = document.getElementById("meret").selectedIndex;
+            let rendel = document.getElementById("gyumolcs").options[gi].text;
+            rendel += ", " + document.getElementById("meret").options[mi].text;
+            rendel += ", " + (document.getElementById("jeg").checked ? "Jéggel" : "-");
+            let html = "<option>" + rendel + "</option>";
+            document.getElementById("lista").innerHTML += html;
+            document.getElementById("lista").selectedIndex = document.getElementById("lista").length-1;
+        }
+        function onTorolClick(){
+            let lista = document.getElementById("lista");
+            let li = document.lista.selectedIndex;
+            if( li != -1 ){
+                let opt = document.lista.options[li];
+                document.lista.removeChild(opt);
+                if(li >= lista.length) li = lista.length-1;
+                document.lista.selectedIndex = li
+            }
+        }
+    </script>
+</head>
+<body>
+    
+    <div id="urlap">
+        <div>
+                <img src="..//oldal2/icons/alma.png" alt="" id="gyumikep"> <br>
+                <select class="valaszt" id="gyumolcs" onchange="onSelectGyumolcs()">
+                    <option value="alma" selected>Alma</option>
+                    <option value="Barack">Barack</option>
+                    <option value="korte">Körte</option>
+                    <option value="meggy">Meggy</option>
+                    <option value="narancs">Narancs</option>
+                </select>
+        </div>
+        <div>
+            <img src="..//oldal2/icons/pohar.png" alt="" id="meretkep"> <br>
+            <select class="valaszt" id="meret" onchange="onSelectedMeret()">
+                <option value="bogre">Bögre</option>
+                <option value="doboz">Doboz</option>
+                <option value="korso">Korsó</option>
+                <option value="pohar" selected>Pohár</option>
+            </select>
+        </div>
+        <div>
+                <img src="./icons/jeg.png" alt=""> <br>
+                <input type="checkbox" id="jeg"> <label for="jeg">Jéggel</label> 
+        </div>
+        <div>
+                <input type="button" value="Rendel" id="gomb" onclick="onRendelClick()">
+                <input type="button" value="Töröl" id="gomb" onclick="onTorolClick()"> <br>
+                <select name="" id="lista" size="10">
+                    <option>Alma, Pohár, -</option>
+                </select>
+        </div>
+    </div>
+
+
+</body>
+</html>

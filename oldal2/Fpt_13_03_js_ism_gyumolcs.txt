@@ -1,0 +1,23 @@
+
+ Hozzuk létre a mintán látható grafikus felületet!
+ - A képek 96x96 pixel méretűek
+ - A választó (<select>+<option>) listák szélessége 100 képpont
+ - A lista (<select size="10">+<option>) szélessége 170 képpont,
+   felette mindkét gomb 80 képpont
+ 
+ 1. Amelyik gyömölcsöt kiválasztjuk (.selectedIndex)
+    a választó listából, az jelenjen meg felette!
+ 2. Amelyik méretet kiválasztjuk (.selectedIndex)
+    a másik választó listából, olyan kép jelenjen meg!
+ 3. A [Rendel] gomb vegye fel az alatta lévő listába a rendelést!
+    Az újonnan felvett sor legyen a kiválasztott (.selectedIndex = x)!
+ 4. A [Töröl] gomb törölje az aktuálisan kiválasztott sort!
+    A kiválasztás maradjon az aktuális, vagy az utolsó soron!
+ 5. Ha a listából kiválasztunk egy sort,
+    akkor a listák és a képek is állítódjanak be annak megfelelően!
+
+ Segítség (választó)lista esetén:
+ .length - a listában található elemek darabszáma
+ .selectedIndex - a kiválasztott elem sorszáma (nullától)
+ .options - egy tömb, ami a lista elemeit tartalmazza
+ .options[i].text - az i. elem szövege

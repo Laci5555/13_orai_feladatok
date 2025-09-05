@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Képek</title>
+    <style>
+        body{
+            background: darkseagreen;
+        }
+        .container{
+            background: lightgreen;
+            width: 380px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            margin: 0px auto;
+            padding: 5px;
+            border: 1px solid black;
+            border-radius: 5px;
+            box-shadow: 2px 2px 10px darkgreen;
+        }
+        #menu{
+            display: flex;
+            flex-direction: column;
+            width: 250px;
+            
+        }
+        #menu div{
+            text-align: justify;
+            padding: 2px;
+        }
+        #kep{
+            width: 130px;
+            text-align: center;
+        }
+        .container2{
+            margin: 20px auto;
+            background: white;
+            width: 384px;
+            padding: 15px 0px;
+            border-radius: 5px;
+            border: 1px solid black;
+            box-shadow: 2px 2px 10px darkgreen;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            justify-content: center;
+            align-items: center;
+        }
+        .container2 img{
+            border: 1px solid lightgray;
+            border-radius: 5px;
+            
+        }
+        .container2 img:hover{
+            border: 1px solid red;
+            cursor: pointer;
+        }
+    </style>
+    <script>
+        function onHozzaadClick() {
+            
+            let sor = "sk";
+            if(document.getElementById("sf").checked){
+                sor = "sf";
+            }else if(document.getElementById("sk").checked){
+                sor = "sk";
+            }else if(document.getElementById("sa").checked){
+                sor = "sa";
+            }
+            let osz = "ok";
+            if(document.getElementById("ob").checked){
+                osz = "ob";
+            }else if(document.getElementById("ok").checked){
+                osz = "ok";
+            }else if(document.getElementById("oj").checked){
+                osz = "oj";
+            }
+
+            let az = sor + " " + osz;
+            console.log(az);
+            
+
+            let kep = document.getElementById("kepvalaszto").value
+            if(document.getElementById("mappa").checked) kep += "_m";  
+            document.getElementById(az).src = kep + ".png"
+        }
+
+        function onSelectChange(){
+            let kep = document.getElementById("kepvalaszto").value
+            if(document.getElementById("mappa").checked) kep += "_m";
+            document.getElementById("kepp").src = kep + ".png"
+        }
+
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div id="menu">
+            <div class="sor">
+                Kép: 
+                <select name="" id="kepvalaszto" onchange="onSelectChange()">
+                    <option value="fa">Fa</option>
+                    <option value="gomba" selected>Gomba</option>
+                    <option value="idegen">Idegen</option>
+                    <option value="szellem">Szellem</option>
+                    <option value="semmi">semmi</option>
+                </select>
+            </div>
+            <div class="sor">
+                Sor: <input type="radio" name="Sor" id="sf"> Felső <input type="radio" name="Sor" id="sk" checked> Középső <input type="radio" name="Sor" id="sa"> Alsó
+            </div>
+            <div class="sor">
+                Oszlop: <input type="radio" name="Oszlop" id="ob"> Bal <input type="radio" name="Oszlop" id="ok" checked> Középső <input type="radio" name="Oszlop" id="oj"> Jobb
+            </div>
+            <div class="sor">Mappa <input type="checkbox" name="" id="mappa" onchange="onSelectChange()"> <label for="mappa">Mappám</label></div>
+            <div class="sor"><input type="button" value="Hozzáad" onclick="onHozzaadClick()"></div>
+        </div>
+        <div id="kep">
+            <img src="gomba.png" alt="" id="kepp">
+        </div>
+    </div>
+    <div class="container2">
+        <img src="semmi.png" alt="" id="sf ob">
+        <img src="semmi.png" alt="" id="sf ok">
+        <img src="semmi.png" alt="" id="sf oj">
+        <img src="semmi.png" alt="" id="sk ob">
+        <img src="semmi.png" alt="" id="sk ok">
+        <img src="semmi.png" alt="" id="sk oj">
+        <img src="semmi.png" alt="" id="sa ob">
+        <img src="semmi.png" alt="" id="sa ok">
+        <img src="semmi.png" alt="" id="sa oj">
+    </div>
+</body>
+</html>

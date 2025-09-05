@@ -1,0 +1,20 @@
+Leves;Bográcsgulyás;1695
+Leves;Erdei gyümölcskrémleves;1325
+Leves;Francia hagymaleves cipóval;1450
+Leves;Májgaluskaleves;1325
+Leves;Tárkonyos raguleves;1570
+Leves;Újházi tyúkhúsleves;1325
+Sertés;Brassói aprópecsenye;2805
+Sertés;Cigánypecsenye;3180
+Sertés;Csülök pékné módra;3130
+Sertés;Lecsós sertésszűz;3670
+Sertés;Óriás bécsi szelet;3300
+Sertés;Pácolt tarja roston;3300
+Szárnyas;Baconbe göngyölt csirkemell;2805
+Szárnyas;Cordon Bleu;3200
+Szárnyas;Joghurtos csirkemell;3300
+Szárnyas;Konfitált kacsacomb;3920
+Szárnyas;Parmezánbundás csirkemell;2930
+Szárnyas;Rántott csirkemell;2930
+Szárnyas;Rántott csirkeszárny;2560
+Szárnyas;Vasalt csirkecomb;2805

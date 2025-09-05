@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Állatok</title>
+    <style>
+        body{
+            background: darkseagreen;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container{
+            border: 1px solid black;
+            background: white;
+            width: 960px;
+            height: 96px;
+            padding: 10px;
+            margin: 50px auto 15px;
+        }
+        .container2{
+            border: 1px solid black;
+            background: white;
+            width: 300px;
+            padding: 5px 0px;
+            margin: 0px auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            
+        }
+        .container2 img{
+            border: 1px solid black;
+            padding: 3px;
+        }
+        .container2 div{
+            display: flex;
+            gap: 20px;
+        }
+        .container2 p{
+            display: flex;
+            flex-direction: row;
+            gap:67px;
+            margin: 5px 0px;
+        }
+        #majom{
+            background: lightskyblue;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+
+    </div>
+    <div class="container2">
+        <div><img src="goat48.png" alt="" onclick="feltolt('goat')"><img id="majom" src="monkey48.png" alt="" onclick="feltolt('monkey')"><img src="pig48.png" alt="" onclick="feltolt('pig')"><img src="tiger48.png" alt="" onclick="feltolt('tiger')"></div>
+    </div>
+    <input type="button" value="Törlés" onclick="torles()">
+
+    
+    
+
+    <script>
+
+        goatcount = 0
+        monkeycount = 0
+        pigcount = 0
+        tigercount = 0
+
+        document.querySelector('.container2').innerHTML = `<div><img src="goat48.png" alt="" onclick="feltolt('goat')"><img id="majom" src="monkey48.png" alt="" onclick="feltolt('monkey')"><img src="pig48.png" alt="" onclick="feltolt('pig')"><img src="tiger48.png" alt="" onclick="feltolt('tiger')"></div> <p><span>${goatcount}</span> <span>${monkeycount}</span> <span>${pigcount} </span><span>${tigercount}</span></p>`
+
+        function feltolt(id) {
+            if(id=='goat'){
+                document.querySelector('.container').innerHTML += `<img src="goat96.png" alt="">`
+                goatcount += 1
+                document.querySelector('.container2').innerHTML = `<div><img src="goat48.png" alt="" onclick="feltolt('goat')"><img id="majom" src="monkey48.png" alt="" onclick="feltolt('monkey')"><img src="pig48.png" alt="" onclick="feltolt('pig')"><img src="tiger48.png" alt="" onclick="feltolt('tiger')"></div> <p><span>${goatcount}</span> <span>${monkeycount}</span> <span>${pigcount} </span><span>${tigercount}</span></p>`
+            }else if(id=='monkey'){
+                document.querySelector('.container').innerHTML += `<img src="monkey96.png" alt="">`
+                monkeycount += 1
+                document.querySelector('.container2').innerHTML = `<div><img src="goat48.png" alt="" onclick="feltolt('goat')"><img id="majom" src="monkey48.png" alt="" onclick="feltolt('monkey')"><img src="pig48.png" alt="" onclick="feltolt('pig')"><img src="tiger48.png" alt="" onclick="feltolt('tiger')"></div> <p><span>${goatcount}</span> <span>${monkeycount}</span> <span>${pigcount} </span><span>${tigercount}</span></p>`
+            }else if(id=='pig'){
+                document.querySelector('.container').innerHTML += `<img src="pig96.png" alt="">`
+                pigcount += 1
+                document.querySelector('.container2').innerHTML = `<div><img src="goat48.png" alt="" onclick="feltolt('goat')"><img id="majom" src="monkey48.png" alt="" onclick="feltolt('monkey')"><img src="pig48.png" alt="" onclick="feltolt('pig')"><img src="tiger48.png" alt="" onclick="feltolt('tiger')"></div> <p><span>${goatcount}</span> <span>${monkeycount}</span> <span>${pigcount} </span><span>${tigercount}</span></p>`
+            }else if(id=='tiger'){
+                document.querySelector('.container').innerHTML += `<img src="tiger96.png" alt="">`
+                tigercount += 1
+                document.querySelector('.container2').innerHTML = `<div><img src="goat48.png" alt="" onclick="feltolt('goat')"><img id="majom" src="monkey48.png" alt="" onclick="feltolt('monkey')"><img src="pig48.png" alt="" onclick="feltolt('pig')"><img src="tiger48.png" alt="" onclick="feltolt('tiger')"></div> <p><span>${goatcount}</span> <span>${monkeycount}</span> <span>${pigcount} </span><span>${tigercount}</span></p>`
+            }
+
+            if(tigercount+goatcount+pigcount+monkeycount > 9){
+                torles()
+            }
+        }
+        function torles() {
+            goatcount = 0
+            monkeycount = 0
+            pigcount = 0
+            tigercount = 0
+            document.querySelector('.container').innerHTML = ""
+            document.querySelector('.container2').innerHTML = `<div><img src="goat48.png" alt="" onclick="feltolt('goat')"><img id="majom" src="monkey48.png" alt="" onclick="feltolt('monkey')"><img src="pig48.png" alt="" onclick="feltolt('pig')"><img src="tiger48.png" alt="" onclick="feltolt('tiger')"></div> <p><span>${goatcount}</span> <span>${monkeycount}</span> <span>${pigcount} </span><span>${tigercount}</span></p>`
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,20 @@
+
+ 1. Az oldal legyen magyar nyelvű, utf-8 kódolású, "darkseagreen" háttérszínű,
+    20px belső margóval, címsorban pedig legyen a "Képek" szöveg!
+ 2. Felül legyen egy 384 pixel széles "lightgreen" terület, vékony "darkgreen" kerettel!
+    A keret legyen 5 képponttal kerekített, mögötte 2xp 2px 10px "darkgreen" árnyékkal!
+    A tartalom fent/lent 5px, oldalt pedig 10 pixel távolságra legyen a kerettől!
+    A kép valamilyen módon legyen jobbra igazítva, függőlegesen pedig középre!
+    Az alsó rész szintén 384 képpont széles, fehér hátterű, ugyanolyan kerettel és árnyékkal!
+    A benne lévő képek vékony világosszürke keretűek, 10px belső, 5px külső margóval!
+    A képterületen az egérmutató alatti ikon kerete legyen piros!
+ 3. Hozzuk létre az űrlapelemeket!
+    A választható képek: Fa, Gomba (alapértelmezett), Idegen, Szellem!
+    A sornál és az oszlopnál az alapértelmezetten kiválasztott legyen a Középső!
+    A mappa alapesetben ne legyen megjelölve!
+ 4. Az oldal betöltése után a képterületet töltsük fel 3 sorban, soronként 3db semmi.png képpel!
+    Ha kiválasztunk egy képet, akkor az jelenjen meg a felső rész jobb oldalán!
+    Ha megváltoztatjuk a mappa állapotát, akkor változzon meg a jobboldali kép is!
+ 5. Ha a "Hozzáad" gombra kattintunk,
+    akkor a kiválasztott kép, mappával, vagy anélkül,
+    de jelenjen meg a képterületen a kiválasztott sor és oszlop pozícióban!
