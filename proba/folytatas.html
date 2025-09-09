@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+
+        //Alapesetben sorrendben hajtja végre a parancsokat
+        console.log("Első");
+        console.log("Második");
+        function kesleltet(){
+            console.log("Harmadik");
+        }
+        setTimeout(kesleltet, 3000);
+        console.log("Negyedik");
+
+        function sima(){
+            console.log("sima");
+        }
+        sima();
+        console.log("sima:", sima());
+        async function aszinkron() {
+            console.log("aszinkron");
+        }
+        aszinkron();
+        console.log("Ötödik");
+        console.log("aszinkron:", aszinkron());
+        
+        let igeret = new Promise((resolve, reject) => {
+            if (3 == 3){
+                resolve("Igéret sikerült!");
+            } else {
+                reject("Igéret nem sikerült!");
+            }
+        });
+        console.log("igeret:", igeret);
+        igeret
+        .then(valasz => console.log(valasz))
+        .catch(hiba => console.log(hiba));
+
+        console.log("fetch:", fetch("https://raw.githubusercontent.com/barsonyj/json/refs/heads/main/tarzan.json"))
+        fetch("https://raw.githubusercontent.com/barsonyj/json/refs/heads/main/tarzan.json")
+        .then(response => response.json())
+        .then(valasz => console.log(valasz))
+        .catch(hiba => console.log(hiba));
+
+
+        let adat = null;
+        async function getTarzan() {
+            let response = await fetch("https://raw.githubusercontent.com/barsonyj/json/refs/heads/main/tarzan.json")
+            let valasz = await response.json();
+            adat = { ...valasz };
+            console.log(adat)
+        }
+        getTarzan();
+        //console.log("adat:", adat);
+
+        async function getWales() {
+            let res =  await fetch("https://barsonyj.github.io/json/wales.txt")
+            let txt = await res.text();
+            document.querySelector(".ide").innerText = txt;
+        }
+        getWales();
+        
+
+    </script>
+</head>
+<body>
+    <div class="ide">
+
+    </div>
+</body>
+</html>

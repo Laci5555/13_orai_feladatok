@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .lista{
+            background: aquamarine;
+            border: 1px solid black;
+            padding: 10px;
+        }
+        .lista p{
+            margin: 2px;
+        }
+        .lista p:hover{
+            background: bisque;
+        }
+    </style>
+    <script>
+        //Spread (szétterítő) operátor ...
+        let t1 = [1, 2, 3, 4, 5];
+        console.log(t1);
+        let t2 = t1;
+        console.log(t2);
+        t1[2] = 4;
+        console.log(t1);
+        console.log(t2);
+        
+        let t3 = [...t1];
+        console.log(t3);
+        t1[0] = 6;
+        console.log(t1);
+        console.log(t3);
+        
+        console.log(...t3);
+
+        //Destucturing (Destruktúráló) értékadás
+        let o1 = {nev:"Béla", magas:160, kor:18};
+        console.log("o1:", o1);
+        let {nev, magas} = o1;
+        console.log("nev", nev)
+        console.log("magas", magas)
+
+        function semmi1(obj){
+            console.log("nev + magas", obj.nev, obj.magas);
+        }
+        semmi1(o1)
+        
+        function semmi2({nev, magas}){
+            console.log("nev + magas", nev, magas);
+        }
+        semmi2(o1)
+
+        t1.push(8)
+        console.log(t1);
+        let [elso, masodik, ...tobbi ] = t1
+        console.log("elso:", elso, "madodik:", masodik, "tobbi:", tobbi);
+        
+        let {nev:name, ...maradek} = o1
+        console.log("name:", name, "maradek:", maradek);
+        
+        //Tömbfüggvények
+        let tanulok =[
+            {nev:"Zoli", osz:"13/B"},
+            {nev:"Sanyi", osz:"13/C"},
+            {nev:"Anett", osz:"13/E"}
+        ];
+        let nevek = tanulok.map(x =>  x.nev);
+        console.log("nevek:", nevek);
+        
+        let zolik = tanulok.map(x => {
+            if(x.nev == "Zoli") return "Zoli"; else return "Nem Zoli";
+        })
+        console.log("zolik:", zolik);
+        
+        let sanyik = tanulok.filter(x => x.nev == "Sanyi");
+        console.log("Sanyik:", sanyik);
+
+        let nevekS = nevek.join(", ");
+
+
+        function start(){
+            document.querySelector(".ide").innerHTML = nevekS;
+            document.querySelector(".lista").innerHTML = tanulok.map(x => `<p>Név: ${x.nev},     Osztály: ${x.osz}  </p>`).join("\n")
+        }
+        
+        
+
+    </script>
+</head>
+<body onload="start()">
+    <div class="ide"></div>
+    <div class="lista"></div>
+</body>
+</html>
