@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Levelek</title>
+    <style>
+        body{
+            background: yellowgreen;
+        }
+        .container{
+            width: 1000px;
+            margin: 0px auto;
+            height: 1000px;
+            display: flex;
+            flex-direction: row;
+            gap: 30px;
+        }
+        .box{
+            border: solid black 1px;
+            border-radius: 5px;
+            width: 200px;
+            max-height: fit-content;
+            box-shadow: 2px 2px 10px black;
+            padding: 5px;
+            background: white;
+            text-align: left;
+        }
+        .box h3{
+            border: lightgrey 1px solid;
+            border-radius: 5px 5px 0px 0px;
+            padding: 5px;
+            margin: 0px;
+        }
+        #scroll{
+            overflow-y: scroll;
+            width: 350px;
+            max-height: 510px;
+        }
+        .feladok:hover{
+            cursor: pointer;
+            background: lightgreen;
+        }
+    </style>
+    <script>
+        
+        function start(){
+            getFeladok();
+            getStats();
+        }
+
+        async function getFeladok(){
+            let resp = await fetch("http://localhost:88/feladok");
+            let json = await resp.json();
+            //console.log(json);
+            document.getElementById("box1").innerHTML = "";
+            document.getElementById("box1").innerHTML = `<h3>Feladók: <img src="reload.png" alt="" style="float: right;"></h3>`
+            json.forEach(x => {
+                document.getElementById("box1").innerHTML += 
+                `
+                <div class="feladok" onclick="getKuldottLevelek('${x}')">
+                    ${x}
+                </div>
+                `
+            });
+        }
+
+        async function getStats() {
+            let resp = await fetch("http://localhost:88/level?leg=rovidebb")
+            let json = await resp.json();
+            document.querySelector(".rovid").innerHTML += json.hossz
+
+            let resp2 = await fetch("http://localhost:88/level?leg=hosszabb")
+            let json2 = await resp2.json();
+            document.querySelector(".hossz").innerHTML += json2.hossz
+
+            let resp3 = await fetch("http://localhost:88/level?leg=korabbi")
+            let json3 = await resp3.json();
+            document.querySelector(".kora").innerHTML = `Legkorábbi: [${json3.mikor}]`
+
+            let resp4 = await fetch("http://localhost:88/level?leg=kesobbi")
+            let json4 = await resp4.json();
+            document.querySelector(".keso").innerHTML = `Legkésőbbi: [${json4.mikor}]`
+        }
+
+        
+
+        async function getKuldottLevelek(value){
+            //console.log(value);
+            let resp = await fetch(`http://localhost:88/kuldott?felado=${value}`)
+            let json = await resp.json();
+            document.getElementById("scroll").innerHTML = "";
+            document.getElementById("scroll").innerHTML = "<h3>Küldött Levelek (?):</h3>"
+            json.forEach(x => {
+                document.getElementById("scroll").innerHTML += 
+                `
+                <div class="adatok">
+                    [ ${x.mikor} ] ${x.ki} - ${x.hossz} bájt
+                </div>
+                `
+            })
+        }
+    </script>
+</head>
+<body onload="start()">
+    <div class="container">
+        <div class="box" id="box1">
+            <h3>Feladók: <img src="reload.png" alt="" style="float: right;"></h3>
+            <img src="loading.gif" alt="">
+        </div>
+        <div class="box" id="scroll">
+            <h3>Küldött Levelek (?):</h3>
+        </div>
+        <div class="box">
+            <h3>Statisztika:</h3>
+            <ul>
+                <li class="hossz">Leghoszabb: </li>
+                <li class="rovid">Legrövidebb: </li>
+                <li class="kora">Legkorábbi: </li>
+                <li class="keso">Legkésőbbi: </li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
