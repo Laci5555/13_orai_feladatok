@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jegyek</title>
+    <style>
+        body{
+            background: #99ccff;
+        }
+        .container{
+            width: 700px;
+            margin: 0px auto;
+            display: flex;
+            flex-direction: row;
+            gap: 10px;
+        }
+        .box{
+            padding: 10px;
+            box-shadow: 3px 3px 5xp;
+            background: white;
+            border: 1px solid black;
+            border-radius: 5px;
+            width: 200px;
+        }
+        h4{
+            font-weight: bold;
+            color: blue;
+            margin-bottom: 10px;
+            border-bottom: 1px solid black;
+            margin-top: 0px;
+        }
+        #targyak{
+            width: 200px;
+            margin-bottom: 10px;
+        }
+        #targyak div:hover{
+            background: bisque;
+            cursor: pointer;
+        }
+        #osztalyok{
+            width: 434px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 3px;
+            height: 20px;
+        }
+        #nevsor{
+            max-height: fit-content;
+        }
+        #nevsor div:hover{
+            cursor: pointer;
+            background: bisque;
+        }
+        #jegyek{
+            min-height: 100px;
+            max-height: 360px;
+            overflow-y: scroll;
+        }
+        #jegyek div:hover{
+            cursor: pointer;
+            background: bisque;
+        }
+        .jobbalul{
+            display: flex;
+            flex-direction: row;
+            gap: 10px;
+            margin-top: 10px;
+        }
+    </style>
+    <script>
+        function start(){
+            getTargyak();
+            getOsztalyok();
+            fillNevsor();
+            fillJegyek();
+            fillAtlag();
+        }
+
+        async function fillAtlag() {
+            let resp = await fetch("http://localhost:88/tantargyak")
+            let json = await resp.json()
+            let targy = json[0]
+            getAtlag(targy)
+        }
+
+        async function fillJegyek() {
+            let resp = await fetch("http://localhost:88/osztalyok")
+            let json = await resp.json()
+            let osz = json[0]
+            let resp2 = await fetch(`http://localhost:88/nevsor?osztaly=${osz}`)
+            let json2 = await resp2.json()
+            let nev = json2[0]
+            getJegyek(nev , osz)
+        }
+
+        async function getTargyak() {
+            let resp = await fetch("http://localhost:88/tantargyak")
+            let json = await resp.json()
+            json.forEach(x => {
+                document.getElementById("targyak").innerHTML += `<div onclick="getAtlag('${x}')">${x}</div>`
+            });
+        }
+        async function fillNevsor() {
+            let resp = await fetch("http://localhost:88/osztalyok")
+            let json = await resp.json()
+            let osz = json[0]
+            //console.log(osz);
+            let resp2 = await fetch(`http://localhost:88/nevsor?osztaly=${osz}`)
+            let json2 = await resp2.json();
+            document.getElementById("nevsor").innerHTML += `<h4>Névsor(${osz}):</h4>`
+            json2.forEach(x => {
+                document.getElementById("nevsor").innerHTML += `<div onclick="getJegyek('${x}', '${osz}')">${x}</div>`
+            })
+        }
+
+        async function getOsztalyok() {
+            let resp = await fetch("http://localhost:88/osztalyok")
+            let json = await resp.json()
+            let i = 0
+            json.forEach(x => {
+                if(i==0){
+                    document.getElementById("osztalyok").innerHTML += `<input type="radio" name="group" id="${x}" checked onclick="changenevsor('${x}')"><label for="${x}">${x}</label>`
+                }else{
+                    document.getElementById("osztalyok").innerHTML += `<input type="radio" name="group" id="${x}" onclick="changenevsor('${x}')"><label for="${x}">${x}</label>`
+                }
+                i++;
+            })
+        }
+
+        async function getAtlag(targy){
+            //console.log(targy);
+            let resp = await fetch(`http://localhost:88/szamol?fx=atlag&tantargy=${targy}`)
+            let json = await resp.json();
+            //console.log(json);
+            document.getElementById("atlagbox").innerHTML = json;
+        }
+
+
+        async function changenevsor(osz){
+            let resp = await fetch(`http://localhost:88/nevsor?osztaly=${osz}`)
+            let json = await resp.json();
+            document.getElementById("nevsor").innerHTML = "";
+            document.getElementById("nevsor").innerHTML += `<h4>Névsor(${osz}):</h4>`
+            json.forEach(x => {
+                document.getElementById("nevsor").innerHTML += `<div onclick="getJegyek('${x}')">${x}</div>`
+            })
+        }
+
+        async function getJegyek(nev, osz) {
+            //console.log(nev);
+            //console.log(osz);
+            let resp = await fetch(`http://localhost:88/jegyek?nev=${nev}&osztaly=${osz}`)
+            let json = await resp.json();
+            document.getElementById("jegyek").innerHTML = ""
+            document.getElementById("jegyek").innerHTML += `<h4>Jegyek(${nev}):</h4>`
+            //console.log(json);
+            json.forEach(x => {
+                document.getElementById("jegyek").innerHTML += `<div>${x.tantargy}: ${x.jegy}</div>`
+            })
+        }
+    </script>
+</head>
+<body onload="start()">
+    <div class="container">
+        <div class="bal">
+            <div class="box" id="targyak">
+                <h4>Tantárgyak:</h4>
+            </div>
+            <div class="box">
+                <h4 >Átlag (Programozás):</h4>
+                <h1 style="text-align: center;" id="atlagbox">3.58</h1>
+            </div>
+        </div>
+        <div class="jobb">
+            <div class="box" id="osztalyok">
+                <h3 style="font-weight: 300;">Osztályok: </h3>
+            </div>
+            <div class="jobbalul">
+                <div class="box" id="nevsor">
+                    
+                </div>
+                <div class="box" id="jegyek" >
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
