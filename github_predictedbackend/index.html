@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Üdítők</title>
+    <style>
+        body{
+            background: red;
+
+        }
+        .container{
+            display: flex;
+            flex-direction: row;
+            gap: 10px;
+        }
+        .box{
+            background: white;
+            border: 1px solid black;
+            padding: 10px;
+            width: fit-content;
+        }
+        h3{
+            color: red;
+            margin: 0px;
+        }
+        .oszlop{
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        select{
+            scrollbar-width: none;
+            width: 150px;
+            border: solid 1px lightgrey;
+            display: flex;
+            flex-direction: column;
+            padding: 5px;
+        }
+        option:hover{
+            cursor: pointer;
+            background: tomato;
+        }
+    </style>
+    <script>
+        function start(){
+            getKategoria()
+            getMeret();
+        }
+
+        async function getNevek(filter, value) {
+            let resp = await fetch(`http://localhost:88/keres?${filter}=${value}`);
+            let json = await resp.json();
+            if(value >= 0){
+                value = value + "ml"
+            }
+            document.getElementById("uditobox").innerHTML = 
+            `
+                <h3>Üdítők (${value})</h3>
+                    
+                        <select name="" id="uditok" style="width: 300px;">
+
+                        </select>
+            `
+            document.getElementById("uditok").innerHTML = ""
+            json.forEach(x => {
+                document.getElementById("uditok").innerHTML += `<option onclick="getReszlet('${x.nev}')">${x.nev}</option>`
+            });
+            document.getElementById("uditok").setAttribute('size', json.length)
+            document.getElementById("uditok").selectedIndex = 0
+            
+
+            getReszlet(json[0].nev)
+        }
+
+        async function getKategoria() {
+            let resp = await fetch("http://localhost:88/kategoriak");
+            let json = await resp.json();
+            document.getElementById("kat").innerHTML = "";
+            json.forEach(x => {
+                document.getElementById("kat").innerHTML += `<option onclick="getNevek('kategoria' , '${x}')">${x}</option>`
+            });
+            document.getElementById("kat").setAttribute('size', json.length)
+            document.getElementById("kat").selectedIndex = 0
+            getNevek('kategoria', json[0])
+        }
+
+        async function getMeret(){
+            let resp = await fetch("http://localhost:88/meret");
+            let json = await resp.json();
+            document.getElementById("meret").innerHTML = ""
+            json.forEach(x => {
+                document.getElementById("meret").innerHTML += `<option onclick="getNevek( 'meret', '${x}')">${x} ml</option>`
+            });
+            document.getElementById("meret").setAttribute('size', json.length)
+            document.getElementById("meret").selectedIndex = 0
+        }
+
+        async function getReszlet(nev) {
+            let resp = await fetch(`http://localhost:88/keres?nev=${nev}`);
+            let json = await resp.json();
+            document.getElementById("reszlet").innerHTML = "";
+            document.getElementById("reszlet").innerHTML += 
+            `
+                <h3>Részletek: </h3> 
+                Név: ${json[0].nev} <br>
+                Méret: ${json[0].ml} <br>
+                Energia: ${json[0].kcal}
+            `;
+            
+        }
+    </script>
+</head>
+<body onload="start()">
+    <div class="container">
+        <div class="oszlop">
+            <div class="box"  style="width: 150px;">
+                <h3>Kategóriák: </h3>
+                
+                    <select name="" id="kat">
+
+                    </select>
+                
+            </div>
+            <div class="box" style="width: 150px;">
+                <h3>Méretek: </h3>
+                
+                    <select name="" id="meret" >
+
+                    </select>
+                
+            </div>
+        </div>
+        <div class="oszlop">
+                <div class="box" style="width: 300px;" id="uditobox">
+                    <h3>Üdítők ()</h3>
+                    
+                        <select name="" id="uditok" style="width: 300px;">
+
+                        </select>
+                    
+                </div>
+            <div class="box" id="reszlet" style="width: 300px; display: flex; flex-direction: column;">
+                
+            </div>
+        </div>
+        <div class="kep">
+            <img src="./swcc.jpg" alt="" style="width: 300px; height: 300px; border: 1px solid black; box-shadow: 4px 4px 8px;">
+        </div>
+    </div>
+</body>
+</html>
