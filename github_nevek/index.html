@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nevek</title>
+    <style>
+        body{
+            background: darkkhaki;
+        }
+        .container{
+            padding: 10px;
+            display: flex;
+            flex-direction: row;
+            gap: 10px;
+            margin: 0px;
+        }
+        .box{
+            border: 1px solid black;
+            border-radius: 5px;
+            padding: 10px;
+            background: white;
+            text-align: center;
+        }
+        #oszlop{
+            width: 100px;
+            border-radius: 5px 0px 0px 5px;
+            border-right: none;
+            display: flex;
+            flex-direction: column;
+        }
+        #kisoszlop div:hover{
+            cursor: pointer;
+            background: bisque;
+        }
+        #info{
+            width: 400px;
+            border-radius: 0px 5px 5px 0px;
+            border-left: none;
+            text-align: left;
+        }
+        .container2{
+            display: flex;
+            flex-direction: row;
+        }
+        h1{
+            font-size: 42pt;
+            font-weight: bold;
+            border-bottom: 1px solid grey;
+            width: fit-content;
+            padding-bottom: 0px;
+            margin: 0px;
+        }
+        span:hover{
+            cursor: pointer;
+            background: bisque;
+        }
+    </style>
+    <script>
+        function start(){
+            getFiuk()
+        }
+
+        async function getFiuk() {
+            let resp = await fetch("http://localhost:88/fiuk")
+            let json = await resp.json();
+            let i = 0;
+            document.getElementById("kisoszlop").innerHTML = "";
+            json.forEach(x => {
+                if(i == 0){
+                document.getElementById("kisoszlop").innerHTML += 
+                `
+                    <div onclick="getInfo('${x}')">
+                        <input type="radio" name="fiuk" id="${x}" checked>
+                        <label for="${x}">${x}</label>
+                    </div>
+                `
+                i++;
+                }else {
+                    document.getElementById("kisoszlop").innerHTML += 
+                    `
+                    <div onclick="getInfo('${x}')">
+                        <input type="radio" name="fiuk" id="${x}" >
+                        <label for="${x}">${x}</label>
+                    </div>
+                    `
+                }
+                
+            });
+            getInfo(json[0])
+        }
+
+        async function getLanyok() {
+            let resp = await fetch("http://localhost:88/lanyok")
+            let json = await resp.json();
+            let i = 0;
+            document.getElementById("kisoszlop").innerHTML = "";
+            json.forEach(x => {
+                if(i == 0){
+                document.getElementById("kisoszlop").innerHTML += 
+                `
+                    <div onclick="getInfo('${x}')">
+                        <input type="radio" name="lanyok" id="${x}" checked>
+                        <label for="${x}">${x}</label>
+                    </div>
+                `
+                i++;
+                }else {
+                    document.getElementById("kisoszlop").innerHTML += 
+                    `
+                    <div onclick="getInfo('${x}')">
+                        <input type="radio" name="lanyok" id="${x}">
+                        <label for="${x}">${x}</label>
+                    </div>
+                    `
+                }
+                
+            });
+            getInfo(json[0])
+        }
+
+        async function getInfo(nev) {
+            let resp = await fetch(`http://localhost:88/info?nev=${nev}`)
+            let json = await resp.json();
+            console.log(json);
+            let split = json.nap.split(" ");
+            let honap = split[0]
+            let nap = split[1]
+            document.getElementById("info").innerHTML = 
+            `
+                <h1>${json.nev}</h1>
+                <p>Névnap: <span onclick="getHonap('${honap}')">${honap}</span> <span onclick="getNap('${nap}')">${nap}</span></p>
+                <p>${json.eredet}</p>
+            `
+        }
+
+        async function getHonap(honap) {
+            let resp = await fetch(`http://localhost:88/nevek?honap=${honap}`)
+            let json = await resp.json();
+            //console.log(json);
+            document.getElementById("honap").checked = true
+            let i = 0;
+            document.getElementById("kisoszlop").innerHTML = "";
+            json.forEach(x => {
+                if(i == 0){
+                document.getElementById("kisoszlop").innerHTML += 
+                `
+                    <div onclick="getInfo('${x.nev}')">
+                        <input type="radio" name="honapok" id="${x.nev}" checked>
+                        <label for="${x.nev}">${x.nev}</label>
+                    </div>
+                `
+                i++;
+                }else {
+                    document.getElementById("kisoszlop").innerHTML += 
+                    `
+                    <div onclick="getInfo('${x.nev}')">
+                        <input type="radio" name="honapok" id="${x}">
+                        <label for="${x.nev}">${x.nev}</label>
+                    </div>
+                    `
+                }
+                
+            });
+            getInfo(json[0])
+        }
+
+        async function getNap(nap) {
+            let split = nap.split(".")
+            nap = split[0]
+            let resp = await fetch(`http://localhost:88/nevek?nap=${nap}`)
+            let json = await resp.json();
+            //console.log(json);
+            document.getElementById("honap").checked = true
+            let i = 0;
+            document.getElementById("kisoszlop").innerHTML = "";
+            json.forEach(x => {
+                if(i == 0){
+                document.getElementById("kisoszlop").innerHTML += 
+                `
+                    <div onclick="getInfo('${x.nev}')">
+                        <input type="radio" name="napok" id="${x.nev}" checked>
+                        <label for="${x.nev}">${x.nev}</label>
+                    </div>
+                `
+                i++;
+                }else {
+                    document.getElementById("kisoszlop").innerHTML += 
+                    `
+                    <div onclick="getInfo('${x.nev}')">
+                        <input type="radio" name="napok" id="${x}">
+                        <label for="${x.nev}">${x.nev}</label>
+                    </div>
+                    `
+                }
+                
+            });
+            getInfo(json[0])
+        }
+    </script>
+</head>
+<body onload="start()">
+    <div class="container">
+        <div id="fiubox" class="box">
+            <img src="./fiuk.png" alt=""> <br>
+            <input type="radio" name="gender" id="fiu" onclick="getFiuk()" checked>
+            <label for="fiu">Fiúk</label>
+        </div>
+        <div id="lanybox" class="box">
+            <img src="./lanyok.png" alt=""> <br>
+            <input type="radio" name="gender" id="lany" onclick="getLanyok()">
+            <label for="lany">Lányok</label>
+        </div>
+        <div id="naptarbox" class="box">
+            <img src="./naptar.png" alt=""> <br>
+            <input type="radio" name="gender" id="honap" disabled>
+            <label for="honap">Naptár</label>
+        </div>
+    </div>
+    <div class="container2">
+        <div id="oszlop" class="box">
+            <div style="border-right: 1px solid grey; text-align: left;" id="kisoszlop">
+
+            </div>
+        </div>
+        <div id="info" class="box">
+            
+        </div>
+    </div>
+    <div>
+
+    </div>
+</body>
+</html>

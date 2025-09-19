@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zenék</title>
+    <style>
+        body{
+            background-image: linear-gradient(white, red);
+            background-attachment: fixed;
+        }
+        .container{
+            margin: auto;
+            width: fit-content;
+        }
+        .box h4{
+            background: lightcoral;
+            border-bottom: 1px solid black;
+            font-weight: bold;
+            padding: 5px 10px;
+            margin: 0px;
+            border-radius: 10px 10px 0px 0px;
+        }
+        .box{
+            border: 1px solid black;
+            border-radius: 10px 10px 5px 5px;
+            background: white;   
+        }
+        select{
+            height: 220px;
+            overflow-y: scroll;
+            scrollbar-width: thin;
+            margin: 5px;
+            border: 1px solid grey;
+        }
+        option:hover {
+            cursor: pointer;
+            background: beige;
+        }
+    </style>
+    <script>
+        function start(){
+            getEloadok();
+            getAlbumok();
+            getEvek();
+        }
+
+        async function getEloadok() {
+            let resp = await fetch("http://10.201.2.19:88/eloadok")
+            let json = await resp.json();
+            let i = 0
+            json.forEach(x => {
+                document.getElementById("eloadok").innerHTML += `<option value="${x}" onclick="getZenek('${x}', 'eloado')">${x}</option>`
+                if(i==0){
+                    getZenek(x, 'eloado')
+                }
+                i++;
+            });
+            document.getElementById("eloadok").selectedIndex = 0
+        }
+
+        async function getAlbumok() {
+            let resp = await fetch("http://10.201.2.19:88/albumok")
+            let json = await resp.json();
+            json.forEach(x => {
+                document.getElementById("albumok").innerHTML += `<option value="${x}" onclick="getZenek('${x}', 'album')">${x}</option>`
+            });
+        }
+
+        async function getEvek() {
+            let resp = await fetch("http://10.201.2.19:88/evek")
+            let json = await resp.json();
+            json.forEach(x => {
+                document.getElementById("evek").innerHTML += `<option value="${x}" onclick="getZenek('${x}', 'ev')">${x}</option>`
+            });
+        }
+
+        async function getZenek(search, type) {
+            let resp = await fetch(`http://10.201.2.19:88/zenek?${type}=${search}`)
+            let json = await resp.json();
+            document.getElementById("alsobox").innerHTML = ""
+            if(type == "eloado"){
+                document.getElementById("alsobox").innerHTML += `<h4>Előadó: ${search}</h4>
+                <select name="" id="eloado" size="10" style="width: 620px;">
+                    
+                </select>`
+            }else if(type == "album"){
+                 document.getElementById("alsobox").innerHTML += `<h4>Album: ${search}</h4>
+                 <select name="" id="eloado" size="10" style="width: 620px;">
+                    
+                </select>`
+            }else if(type == "ev"){
+                 document.getElementById("alsobox").innerHTML += `<h4>Év: ${search}</h4>
+                 <select name="" id="eloado" size="10" style="width: 620px;">
+                    
+                </select>`
+            }
+            json.forEach(x => {
+                document.getElementById("eloado").innerHTML += `<option value="${x.eloado}">${x.eloado} - ${x.cim} (${x.ev})</option>`
+            })
+        }
+    </script>
+</head>
+<body onload="start()">
+    <div class="container">
+        <div class="felul" style="display: flex; flex-direction: row; gap: 10px; margin-bottom: 10px;">
+            <div class="box">
+                <h4>Előadók</h4>
+                <select name="" id="eloadok" size="10"  style="width: 150px;">
+
+                </select>
+            </div>
+            <div class="box" >
+                <h4>Albumok</h4>
+                <select name="" id="albumok" size="10" style="width: 350px;">
+                    
+                </select>
+            </div>
+            <div class="box" >
+                <h4>Évek</h4>
+                <select name="" id="evek" size="10" style="width: 75px;">
+                    
+                </select>
+            </div>
+        </div>
+        <div class="alul">
+            <div class="box" id="alsobox">
+                <h4>Előadó: gkgáédháéhj</h4>
+                <select name="" id="eloado" size="10" style="width: 620px;">
+                    
+                </select>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
