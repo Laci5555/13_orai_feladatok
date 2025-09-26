@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Termékek</title>
+    <style>
+        body{
+            background: lightcoral;
+        }
+        img{
+            border: 1px solid black;
+            border-radius: 5px;
+        }
+        h3{
+            background: lightpink;
+            margin: 0px;
+            padding: 5px;
+            font-weight: bold;
+            border-radius: 5px 0px 0px 0px;
+        }
+        .box{
+            background: white;
+            border: 1px solid black;
+            border-radius: 5px 0px 5px 0px;
+            margin-bottom: 10px;
+        }
+        select{
+            width: 200px;
+            scrollbar-width: none;
+            border: 1px solid lightgrey;
+        }
+        option:hover{
+            cursor: pointer;
+            background: lightskyblue;
+        }
+        .container{
+            width: 500px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .also{
+            display: flex;
+            flex-direction: row;
+            gap: 10px;
+        }
+        p{
+            width: 200px;
+            margin: 0px;
+        }
+        span{
+            cursor: pointer;
+        }
+    </style>
+    <script>
+        function start(){
+            getKategoriak()
+        }
+
+        async function getOrszagok() {
+            let resp = await fetch("http://10.201.2.18:88/orszagok")
+            let orszagok = await resp.json()
+            document.getElementById("focim").innerHTML = "Országok"
+            document.getElementById("kat").innerHTML = ""
+            orszagok.forEach(x => {
+                document.getElementById("kat").innerHTML += 
+                `
+                    <option value="" onclick="getTermek2('${x}')">${x}</option>
+                `
+                
+            });
+
+            document.getElementById("kat").size = orszagok.length
+            document.getElementById("kat").selectedIndex = 0
+
+            getTermek2(orszagok[0])
+        }
+
+        async function getKategoriak() {
+            let resp = await fetch("http://10.201.2.18:88/kategoriak")
+            let kategoriak = await resp.json()
+            document.getElementById("focim").innerHTML = "Kategóriák"
+            document.getElementById("kat").innerHTML = ""
+            kategoriak.forEach(x => {
+                document.getElementById("kat").innerHTML += 
+                `
+                    <option value="" onclick="getTermek('${x}')">${x}</option>
+                `
+                
+            });
+
+            document.getElementById("kat").size = kategoriak.length
+            document.getElementById("kat").selectedIndex = 0
+
+            getTermek(kategoriak[0])
+        }
+        async function getTermek(kat) {
+            let resp = await fetch(`http://10.201.2.18:88/lista?kategoria=${kat}`)
+            let termekek = await resp.json()
+            //console.log(termekek);
+            document.getElementById("katCim").innerHTML = `Kategória: ${kat}`
+            document.getElementById("term").innerHTML = ""
+            termekek.forEach(x => {
+                document.getElementById("term").innerHTML += 
+                `
+                    <option value="" onclick="TermekInfo('${x}')">${x}</option>
+                `
+            })
+            
+            document.getElementById("term").size = termekek.length
+            document.getElementById("term").selectedIndex = 0
+
+            TermekInfo(termekek[0])
+        }
+
+        async function getTermek2(orsz) {
+            let resp = await fetch(`http://10.201.2.18:88/lista?orszag=${orsz}`)
+            let termekek = await resp.json()
+            //console.log(termekek);
+            document.getElementById("katCim").innerHTML = `Kategória: ${orsz}`
+            document.getElementById("term").innerHTML = ""
+            termekek.forEach(x => {
+                document.getElementById("term").innerHTML += 
+                `
+                    <option value="" onclick="TermekInfo('${x}')">${x}</option>
+                `
+            })
+
+            document.getElementById("term").size = termekek.length
+            document.getElementById("term").selectedIndex = 0
+
+            TermekInfo(termekek[0])
+        }
+
+        async function TermekInfo(termek) {
+            let resp = await fetch(`http://10.201.2.18:88/termek?nev=${termek}`)
+            let info = await resp.json()
+
+            document.getElementById("infK").innerHTML = `<p id="infK"><span style="color:blue; text-decoration:underline;" onclick="getKategoriak()">Kategória:</span> ${info.kategoria}</p>`
+            document.getElementById("infO").innerHTML = `<p id="infO"><span style="color:blue; text-decoration:underline;" onclick="getOrszagok()">Ország:</span> ${info.orszag}</p>`
+            document.getElementById("infSz").innerHTML = `<p id="infSz">Szín: ${info.szin}</p>`
+            document.getElementById("infT").innerHTML = `<p id="infT">Tömeg: ${info.tomeg}</p>`
+            document.getElementById("infA").innerHTML = `<p id="infA">Ár: ${info.ar}</p>`
+        }
+    </script>
+</head>
+<body onload="start()">
+    <div class="container">
+        <div>
+            <img src="./kamion.jpg" alt="">
+        </div>
+        <div class="also">
+            <div class="bal">
+                <div class="box">
+                    <h3 id="focim">Kategóriák</h3>
+                    <div style="padding: 10px;" >
+                        <select name="" id="kat">
+                        
+                        </select> 
+                    </div>
+                </div>
+                <div class="box">
+                    <h3 id="katCim">Kategória: Gabona</h3>
+                    <div style="padding: 10px;">
+                        <select name="" id="term">
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="jobb">
+                <div class="box">
+                    <h3>Termék: búzalistz</h3>
+                    <div style="padding: 10px;">
+                        <p id="infK"><span style="color: blue; text-decoration: underline;">Kategória:</span> </p>
+                        <p id="infO"><span style="color: blue; text-decoration: underline;">Ország:</span> </p>
+                        <p id="infSz">Szín: </p>
+                        <p id="infT">Tömeg: </p>
+                        <p id="infA">Ár: </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

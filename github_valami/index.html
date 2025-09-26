@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Csokik</title>
+    <style>
+        body{
+            background: peru;
+        }
+        .container{
+            width: fit-content;
+            margin: 20px auto;
+        }
+        .box{
+            border: 2px solid black;
+            width: 1000px;
+        }
+        h2{
+            background: brown;
+            color: white;
+            margin: 0;
+            border-bottom: 2px black solid;
+        }
+        table{
+            background: white;
+            height: 300px;
+            display: block;
+            border-spacing: 0px;
+        }
+        #elso{
+            width: 100%;
+            text-align: left;
+        }
+        td{
+            min-width: 70px;
+            border: 1px solid rgb(231, 226, 226);
+            text-align: center;
+            margin: 0;
+        }
+        tr:hover{
+            background: bisque;
+            cursor: pointer;
+        }
+        tbody{
+            display: inline-block;
+            overflow: auto;
+            height: 300px;
+        }
+        #also{
+            background: lightgrey;
+            margin-top: 20px;
+        }
+        img{
+            cursor: pointer;
+        }
+    </style>
+    <script>
+        function start(){
+            fillList()
+        }
+        
+        async function fillList() {
+            let resp = await fetch("http://localhost:88/csokik")
+            let csokik = await resp.json()
+            document.getElementById("ide").innerHTML = ""
+            csokik.forEach(x => {
+                document.getElementById("ide").innerHTML += `
+                    <tr onclick="copy('${x.nev}', '${x.suly}', '${x.kcal}')">
+                        <td id="elso">${x.nev}</td>
+                        <td>${x.suly}</td>
+                        <td>${x.kcal}</td>
+                        <td><img src="./update.png" alt="" onclick="changecsoki(${x.id})"> <img src="./del.png" alt="" onclick="deletecsoki('${x.id}')"></td>
+                    </tr>
+                `
+            });
+        }
+
+        function copy(nev, suly, kcal){
+            document.getElementById("csokinev").value = nev
+            document.getElementById("suly").value = suly
+            document.getElementById("kcal").value = kcal
+        }   
+
+        async function deletecsoki(id) {
+            let resp = await fetch("http://localhost:88/csoki", {
+                method:"DELETE",
+                headers:{"Content-Type": "application/json"},
+                body: JSON.stringify({id:id})
+            })
+
+            fillList()
+        }
+
+        async function changecsoki(id) {
+            let nev = document.getElementById("csokinev").value
+            let suly = document.getElementById("suly").value
+            let kcal = document.getElementById("kcal").value
+
+            if(nev && suly && kcal){
+                let resp = await fetch("http://localhost:88/csoki", {
+                    method:"PUT",
+                    headers:{"Content-Type": "application/json"},
+                    body: JSON.stringify({id:id, nev:nev, suly:suly, kcal:kcal})
+                })
+            }else if(nev){
+                let resp = await fetch("http://localhost:88/csoki", {
+                    method:"PATCH",
+                    headers:{"Content-Type": "application/json"},
+                    body: JSON.stringify({id:id, nev:nev, suly:suly, kcal:kcal})
+                })
+            }
+
+            fillList()
+        }
+
+        async function postcsoki() {
+            let nev = document.getElementById("csokinev").value
+            let suly = document.getElementById("suly").value
+            let kcal = document.getElementById("kcal").value
+
+            let resp = await fetch("http://localhost:88/csoki", {
+                    method:"POST",
+                    headers:{"Content-Type": "application/json"},
+                    body: JSON.stringify({nev:nev, suly:suly, kcal:kcal})
+            })
+
+            fillList()
+        }
+    </script>
+</head>
+<body onload="start()">
+    <div class="container">
+        <div class="box" id="felso">
+            <h2>Csokik</h2>
+            <table>
+                <tbody id="ide">
+                    
+                </tbody>
+            </table>
+        </div>
+        <div class="box" id="also">
+            <h2>Új/kiválasztott csoki</h2>
+            <div style="display: flex; flex-direction: row; gap: 10px; padding: 10px;">
+                <input type="text" name="" id="csokinev" placeholder="Csokinév">
+                <input type="text" id="suly"placeholder="Súly">
+                <input type="text" name="" id="kcal" placeholder="Kalória">
+                <img src="./add.png" alt="" onclick="postcsoki()">
+            </div>
+        </div>
+        <p id="status"></p>
+    </div>
+</body>
+</html>

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autók</title>
+    <style>
+        body{
+            background: darkkhaki;
+        }
+        table{
+            margin: 0px auto;
+            border: 2px solid black;
+            border-collapse: collapse;
+            background: bisque;
+        }
+        .cim {
+            background: burlywood;
+        }
+        .cim th{
+            padding: 5px;
+            border-bottom: solid black 1px;
+        }
+        td{
+            padding: 5px;
+            border: 1px solid lightgrey;
+        }
+        img{
+            vertical-align: middle;
+        }
+        .kep{
+            text-align: center;
+        }
+        .kep:hover{
+            cursor: pointer;
+        }
+        #sor:hover{
+            background: lightcoral;
+            cursor: pointer;
+        }
+    </style>
+    <script>
+        function start(){
+            getAutok();
+        }
+
+        async function getAutok() {
+            let html = `
+            <tr class="cim">
+                <th>Típus</th>
+                <th>Év</th>
+                <th>Szín</th>
+                <th>Művelet</th>
+            </tr>
+            <tr>
+                <td><input type="text" id="tipus" value=""></td>
+                <td><input type="text" id="ev" value=""></td>
+                <td><input type="text" id="szin" value=""></td>
+                <td class="kep" onclick="postAuto()"><img src="add.png" alt=""></td>
+            </tr>
+            `
+            let resp = await fetch("http://localhost:88/list")
+            let autok = await resp.json()
+            //console.log(autok);
+            html += autok.map(x => `
+            <tr id="sor" onclick="copyAuto=('${x.tipus}', '${x.ev}', '${x.szin}')"> 
+                <td>${x.tipus}</td>
+                <td>${x.ev}</td>
+                <td>${x.szin}</td>
+                <td class="kep">
+                    <img src="update.png" onclick="putAuto(${x.id})" title="${x.id}">
+                    <img src="delete.png" onclick="deeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeleteAuto(${x.id})" title="${x.id}">
+                </td></tr>`)
+                .join("\n");
+            document.getElementById("ide").innerHTML = html
+        }
+
+        async function postAuto() {
+            let tipus = document.getElementById("tipus").value
+            let ev = document.getElementById("ev").value * 1
+            let szin = document.getElementById("szin").value
+            let ujAuto = {tipus : tipus, ev:ev, szin:szin};
+            console.log(JSON.stringify(ujAuto));
+            let resp = await fetch("http://localhost:88/add", {
+                method: "POST",
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(ujAuto)
+            });
+            let json = await resp.json();
+            if(!json.error){
+                getAutok();
+            } else {
+                document.getElementById("info").innerHTML = json.error
+            }
+        }
+
+        async function copyAuto(tipus, ev, szin) {
+            document.getElementById("tipus").value = tipus
+            document.getElementById("ev").value = ev
+            document.getElementById("szin").value = szin
+        }
+
+        async function putAuto(id) {
+            let tipus = document.getElementById("tipus").value
+            let ev = document.getElementById("ev").value * 1
+            let szin = document.getElementById("szin").value
+            let auto = {id : id, tipus : tipus, ev:ev, szin:szin};
+            let resp = await fetch("http://localhost:88/upd", {
+                method:"PUT",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(auto)
+            });
+            let json = await resp.json()
+            if(!json.error){
+                getAutok()
+            }else{
+                document.getElementById("info").innerHTML = json.error;
+            }
+        }
+
+        async function deeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeleteAuto(id) {
+            let resp = await fetch("http://localhost:88/del", {
+                method: "DELETE",
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({id:id})
+            });
+            let json = await resp.json();
+            if(!json.error){
+                getAutok();
+            }else {
+                document.getElementById("info").innerHTML = json.error
+            }
+            
+            //console.log("törölve ");
+            
+        }
+    </script>
+</head>
+<body onload="start()">
+    
+    <table id="ide">
+        
+    </table>
+    <p id="info"></p>
+
+
+</body>
+</html>

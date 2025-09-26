@@ -1,0 +1,27 @@
+
+ 1. Hozzunk létre egy projektleíró (package.json) fájlt,
+    amiben állítsuk a projektünket modul típusúra,
+    és szerzőnek adjuk meg a nevünket!
+    Installáljuk az "express" és a "cors" modulokat!
+ 2. Hozzuk létre az index.js fájlt és importáljuk a két modult!
+    Hozzunk létre benne egy objektumtömböt, amiben tároljuk el
+    négy (tetszőleges) autó { id, tipus, ev, szin } adatait!
+ 3. Hozzunk létre egy express alkalmazást, és aktíváljuk a
+    json() illetve a cors() middleware elemeket!
+ 4. Az API legyen képes felismerni a következő kéréseket:
+    * GET "/" -> adja vissza a mintán látható html szöveget!
+    * GET "/list" -> adja vissza az objektumtömböt!
+    * POST "/add" -> ellenőrizze, hogy megkapott-e minden szükséges
+      adatot, majd vegye fel az objektumtömbbe az új autót!
+    * DELETE "/del" -> ellenőrizze, hogy kapott-e azonosítót,
+      és létező azonosítót, majd törölje a hozzá tartozó autót!
+    * PUT "/upd" -> ellenőrizze, hogy megkapott-e minden szükséges
+      adatot, majd módosítsa a megfelelő autót!
+    * PATCH "/szin" -> ellenőrizze, hogy megkapott-e minden szükséges
+      adatot, majd módosítsa a megfelelő autó (CSAK) színét!
+    Hiba esetén error adattagban jelezze a hibát, siker esetén pedig
+    a status adattag értéke legyen "OK", és id adattagban adja
+    vissza a létrehozott/törölt/módosított autó azonosítóját!
+ 5. Az API a 88-as porthoz csatlakozzon, melynek tényleges(!)
+    elindulását jelezzük konzolon, vagy írjuk ki a hiba okát!
+ 6. Az elkészült API szolgáltatásait ellenőrizzük Postman segítségével!

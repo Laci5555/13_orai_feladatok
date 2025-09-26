@@ -1,0 +1,18 @@
+
+ Tetszőleges színekkel készítsük egy, a mintához hasonló weboldalt!
+ // Amúgy háttér "peru", címsor "brown", keret "black" és "lightgray", hover "beige"
+ 1. A "Csokik" ablakban listázzuk a backendtől kapott csokik adatait!
+    // Minden egy láthatatlan (voáh!) 90%-os (== reszponzív) divben van...!
+    Az ablak egy div, melyben korlátozva van a magasság, de engedélyezett a scroll!
+    css: { max-height: 200px; overflow-y: scroll; }
+    Ebbe a divbe tegyünk egy táblázatot, ahol az első oszlop szélessége 100%,
+    a többi oszlopnak pedig a minimum szélessége 70px!
+    css: { min-width: 70px; }
+    Ha valamelyik sor fölé visszük az egeret, akkor változzon meg a háttérszíne!
+ 2. A [+] ikon vegyen fel a backend segítségével egy új csokit!
+    A [X] ikon törölje backend segítségével az adott csokit!
+    Ha rákattintunk egy sorra, akkor az adatai másolódjanak az űrlapba!
+    A [C] ikon módosítsa backend segítségével az adott csokit az űrlap adataival!
+    + Ha módosításkor csak a név van kitöltve, akkor csak a nevet módosítsa!
+    Alul jelenítsük meg a backend üzeneteit!
+ 3. Aki nem dolgozik, az Kakukk! :)

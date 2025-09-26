@@ -1,0 +1,74 @@
+
+ 1. Hozzunk létre egy projektleíró (package.json) fájlt,
+    amiben állítsuk a projektünket modul típusúra,
+    és szerzőnek adjuk meg a nevünket!
+    Installáljuk az "express" és a "cors" modulokat!
+ 2. Hozzuk létre az index.js fájlt és importáljuk a két modult!
+    Importáljuk be az "fs" modult is, és töltsük be a csokik.csv fájlt,
+    ami utf-8 kódolással, pontosvesszővel tagolva csokik adatait
+    tartalmazza { nev, suly, kcal }! Beolvasáskor rendelük mindhez
+    egyedi azonosítót (id)!
+ 3. Hozzunk létre egy express alkalmazást, és aktíváljuk a
+    json() illetve a cors() middleware elemeket!
+ 4. Az API a 88-as porthoz csatlakozzon, melynek tényleges(!)
+    elindulását jelezzük konzolon, vagy írjuk ki a hiba okát!
+ 5. Az API legyen képes felismerni a következő kéréseket:
+    * GET "/" -> adja vissza a "<h1>Csokik v1.0.0</h1>" szöveget!
+    * GET "/csokik" -> adja vissza az objektumtömböt!
+    * GET "/kcal" -> adja vissza az objektumtömbböt kcal értékre rendezve!
+    * GET "/save" -> mentse el az objektumtömböt csv formátumban!
+    * POST "/csoki" -> ellenőrizze, hogy megkapott-e minden szükséges
+      adatot, majd vegye fel az objektumtömbbe az új csokit!
+    * DELETE "/csoki" -> ellenőrizze, hogy kapott-e azonosítót,
+      és létező azonosítót, majd törölje a hozzá tartozó csokit!
+    * PUT "/csoki" -> ellenőrizze, hogy megkapott-e minden szükséges
+      adatot, majd módosítsa a megfelelő csokit!
+    * PATCH "/nev" -> ellenőrizze, hogy megkapott-e minden szükséges
+      adatot, majd módosítsa a megfelelő csoki (CSAK) nevét!
+    Hiba esetén error adattagban jelezze a hibát, siker esetén pedig
+    a status adattag értéke legyen "OK"!
+ 6. Az elkészült API szolgáltatásait ellenőrizzük Postman segítségével!
+
+---
+
+import fs from "fs";
+
+let csokik = [];
+let nextId = 1;
+
+fs.readFile("csokik.csv", "utf-8", (err, data) => {
+    if (err) console.log(err);
+    else {
+        let sorok = data.split("\r\n");
+        for (let sor of sorok) {
+            let s = sor.split(";");
+            csokik.push({ id:nextId, nev:s[0], suly:s[1]*1, kcal:s[2]*1 });
+            nextId++;
+        }
+        console.log("Beolvasott csokik száma: " + csokik.length);
+    }
+});
+
+function saveCsokik(req, res) {
+    let data = csokik.map(x => x.nev + ";" + x.suly + ";" + x.kcal).join("\r\n");
+    fs.writeFile("csokik.csv", data, "utf-8", (err) => {
+        if (err) {
+            console.log(err);
+            res.send({ error: "Mentés nem sikerült!" });
+        } else {
+            console.log("Fájl sikeresen elmentve.");
+            res.send({ status: "OK" });
+        }
+    });
+}
+
+---
+
+ Mentés: fs.writeFile("fajlnev", data, "utf-8", (err) => { ... });
+  // A data változóba szöveget kell átadni.
+  // Ha nincs err, akkor sikerült a mentés.
+ Rendezés: tömb.toSorted((a, b) => a.adattag - b.adattag);
+  // a rendező parancs két elemmel hívja meg a függvényt (a, b),
+  // ami pozitív értéket kell adjon, ha az első a nagyobb,
+  // negatív értéket, ha a második a nagyobb,
+  // nullát, ha a két elem egyforma.
