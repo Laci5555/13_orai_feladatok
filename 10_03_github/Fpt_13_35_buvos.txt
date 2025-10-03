@@ -1,0 +1,31 @@
+
+ 1. Az oldal legyen magyar nyelvű, valamilyen háttérszínű, "Bűvös négyzet" című!
+    A mintának megfelelő tartalmat igazísuk középre!
+    A táblázat létrehozásához egy tipp: legyen 4 soros és 5 oszlopos!
+    + Ekkor a belső 3x3-as területet összeolvasztva
+    + bele tudunk tenni egy másik táblázatot!
+    A táblázat cellái legyenek 60x60 pixelesek, tartalmuk középre igazított!
+    A kereteket a mintának megfelelően hozzuk létre!
+    Ha egy belső cella fölé visszük az egérmutatót,
+    akkor változzon meg a háttérszíne!
+ 2. Ha megadunk egy nevet, akkor a szint kiválasztásával kapunk:
+    - egy "id" számot, ami a további játék során azonosít bennünket,
+      amit jegyezzük meg, de nem kell megjeleníteni,
+    - egy "negyzet" tömböt, ami a kilenc darab számot tartalmazza,
+      amit helyezzünk el 3x3-as négyzetben sorfolytonosan,
+    - egy "hiany" tömböt, ami a négyzetből hiányzó számokat tartalmazza,
+      melyeket jelenítsünk meg nyomógombként a táblázat felett,
+    - és egy "osszeg" objektumot, ami
+      - .s1 (felső) .s2 .s3 adattagokban megadja a sorok összegét,
+      - .o1 (bal) .o2 .o3 adattagokban megadja az oszlopok összegét,
+      - .a1 (bal-alsó) .a2 adattagokban megadja az átlók összegét,
+      - .ok adattagban megadja közülük hány darab összege 15,
+    amiből az összegeket jelenítsük meg a táblázat megfelelő helyén!
+    Ha az .ok értéket 8, akkor a belső táblázat háttérszíne változzon meg!
+    Hiba esetén jelezzük a hibát konzolban!
+ 3. A játék során először a hiányzó számok közül kell választanunk egyet,
+    aminek változzon meg a keret- és háttérszíne,
+    majd a kiválaszott számot backend segítségével felvehetjük a négyzetbe,
+    csak el kell küldenünk az "id"-nket, a cella sorszámát (1-9!) és a számot!
+    A válasz ismét "id", "negyzet", "hiany" és "osszeg" lesz!
+    Hiba esetén jelezzük a hibát konzolban!

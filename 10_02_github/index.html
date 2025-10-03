@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sajtok</title>
+</head>
+<style>
+    body{
+        background: rgb(236, 229, 166);
+    }
+    .thead{
+        background: khaki;
+    }
+    table{
+        background: white;
+        border-collapse: collapse;
+    }
+    h3{
+        margin: 0px;
+        background: rgb(147, 211, 73);
+        border-bottom: 2px solid black;
+        padding: 2px;
+    }
+    td{
+        border: 1px solid lightgrey;
+        padding: 2px;
+    }
+    tr:hover{
+        background: beige;
+        cursor: pointer;
+    }
+    .box{
+        max-width: 800px;
+        margin-bottom: 20px;
+        border: 2px solid black;
+    }
+    .form{
+        background: lightgrey;
+        display: flex;
+        flex-direction: row;
+        gap: 5px;
+        padding: 5px;
+        align-items: center;
+    }
+    img:hover{
+        cursor: crosshair;
+    }
+</style>
+<script>
+    function start(){
+        fillList()
+    }
+
+    async function fillList(){
+        let resp = await (await fetch("http://localhost:88/sajtok")).json()
+        document.getElementById("ide").innerHTML = ""
+        resp.forEach(x => {
+            document.getElementById("ide").innerHTML += 
+            `
+                <tr onclick="copy(${x.id})">
+                        <td style="width: 100%;">${x.nev}</td>
+                        <td style="min-width: 70px; text-align: center;">${x.suly}g</td>
+                        <td style="min-width: 70px; text-align: center;">${x.ar},-Ft</td>
+                        <td style="min-width: 70px; text-align: center;"><img src="./update.png" alt="" style="margin-right: 10px;" onclick="updSajt(${x.id})"><img src="./del.png" alt="" onclick="deleteSajt(${x.id})"></td>
+                </tr>
+            `
+        });
+    }
+
+    async function postSajt() {
+        let nev = document.getElementById("nev").value
+        let suly = document.getElementById("suly").value
+        let ar = document.getElementById("ar").value
+
+        let resp = await fetch("http://localhost:88/sajt", {
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body: JSON.stringify({nev:nev, suly:suly, ar:ar})
+        })
+        let json = await resp.json()
+        //console.log(json);
+        if(json.error){
+            document.getElementById("valasz").innerHTML = json.error
+        }else {
+            document.getElementById("valasz").innerHTML = "OK"
+        }
+        fillList()
+    }
+
+    async function copy(id){
+        let resp = await (await fetch(`http://localhost:88/sajt/${id}`)).json()
+        console.log(resp);
+        if(resp.error){
+            document.getElementById("valasz").innerHTML = resp.error
+        }else{
+            document.getElementById("nev").value = resp[0].nev
+            document.getElementById("suly").value = resp[0].suly
+            document.getElementById("ar").value = resp[0].ar
+        }
+    }
+
+    async function updSajt(id) {
+        let nev = document.getElementById("nev").value
+        let suly = document.getElementById("suly").value
+        let ar = document.getElementById("ar").value
+        
+        if(nev && suly && ar){
+            let resp = await fetch(`http://localhost:88/sajt/${id}`, {
+                method:"PUT",
+                headers:{"Content-Type":"application/json"},
+                body: JSON.stringify({nev:nev, suly:suly, ar:ar})
+            })
+        }else if(nev){
+            let resp = await fetch(`http://localhost:88/sajt/${id}/nev/${nev}`, {
+                method:"PATCH",
+                headers:{"Content-Type":"application/json"}
+            })
+        }
+        fillList()
+    }
+
+    async function deleteSajt(id) {
+        let resp = await fetch(`http://localhost:88/sajt/${id}`, {
+            method:"DELETE",
+            headers:{"Content-Type":"application/json"}
+        })
+        let json = await resp.json()
+        if(json.error){
+            document.getElementById("valasz").innerHTML = resp.error
+        }else {
+            document.getElementById("valasz").innerHTML = "OK"
+        }
+        fillList()
+    }
+
+    async function ar() {
+        let resp = await (await fetch("http://localhost:88/sajtok")).json()
+        if(resp.error){
+            document.getElementById("valasz").innerHTML = resp.error
+        }else{
+            document.getElementById("ide").innerHTML = ""
+            resp = resp.sort((a,b)=> b.ar - a.ar)
+            resp.forEach(x => {
+                document.getElementById("ide").innerHTML += 
+                `
+                    <tr onclick="copy(${x.id})">
+                            <td style="width: 100%;">${x.nev}</td>
+                            <td style="min-width: 70px; text-align: center;">${x.suly}g</td>
+                            <td style="min-width: 70px; text-align: center;">${x.ar},-Ft</td>
+                            <td style="min-width: 70px; text-align: center;"><img src="./update.png" alt="" style="margin-right: 10px;" onclick="updSajt(${x.id})"><img src="./del.png" alt="" onclick="deleteSajt(${x.id})"></td>
+                    </tr>
+                `
+            });
+        }
+    }
+</script>
+<body onload="start()">
+    <div class="container">
+        <div class="box">
+            <h3>Sajtok ( darab) - Ár szerint csökkenő</h3>
+            <div class="tabla">
+                    <table style="border-bottom: 2px solid black;">
+                        <tr class="thead">
+                            <td style="width: 100%;">Név</td>
+                            <td style="min-width: 70px; text-align: center;">Súly</td>
+                            <td style="min-width: 70px; text-align: center;">Ár <img src="./arak.png" alt="" onclick="ar()"></td>
+                            <td style="min-width: 70px; text-align: center;"><img src="./save.png" alt=""></td>
+                        </tr>
+                    </table>
+                    <div style="max-height: 200px; overflow-y: scroll; scrollbar-width: thin;">
+                        <table id="ide">
+                        
+                        </table>
+                    </div>
+            </div>
+        </div>
+        <div class="box">
+            <h3>Új / kiválasztott sajt</h3>
+            <div class="form">
+                <input type="text" placeholder="Sajtnév" id="nev" style="width: 250px;">
+                <input type="text" placeholder="Súly" id="suly" style="width: 70px;">
+                <input type="text" placeholder="Ár" id="ar" style="width: 210px;">
+                <img src="./add.png" alt="" height="16px" onclick="postSajt()">
+            </div>
+        </div>
+    </div>
+    <p id="valasz"></p>
+</body>
+</html>

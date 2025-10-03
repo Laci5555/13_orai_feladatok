@@ -1,0 +1,22 @@
+const lepkek = [
+ { id:1, magyar:"Fekete őszapó", latin:"Papilio machaon", meret:"50-60" },
+ { id:2, magyar:"Csíkos peremlepke", latin:"Gonepteryx rhamni", meret:"40-45" },
+ { id:3, magyar:"Vörös sávos szendvicslepke", latin:"Vanessa atalanta", meret:"55-60" },
+ { id:4, magyar:"Kis fátyolképű lepke", latin:"Pieris rapae", meret:"40-50" },
+ { id:5, magyar:"Szürke rétlepke", latin:"Argynnis paphia", meret:"50-60" },
+ { id:6, magyar:"Kétfarkú szürke lepke", latin:"Gonepteryx cleopatra", meret:"45-50" },
+ { id:7, magyar:"Fakó császárlepke", latin:"Limenitis camilla", meret:"50-55" },
+ { id:8, magyar:"Viráglakó lepke", latin:"Inachis io", meret:"50-55" },
+ { id:9, magyar:"Színes peremlepke", latin:"Nymphalis polychloros", meret:"50-60" },
+ { id:10, magyar:"Farkaslepke", latin:"Aporia crataegi", meret:"45-55" },
+ { id:11, magyar:"Zöldes faszúnyoglepke", latin:"Colias hyale", meret:"45-50" },
+ { id:12, magyar:"Fekete-fehér császárlepke", latin:"Limenitis reducta", meret:"50-55" },
+ { id:13, magyar:"Fiatal fürtöslepke", latin:"Melitaea cinxia", meret:"40-50" },
+ { id:14, magyar:"Pontos cikászló", latin:"Aglais urticae", meret:"40-45" },
+ { id:15, magyar:"Júlia lepke", latin:"Vanessa cardui", meret:"50-55" },
+ { id:16, magyar:"Fátyolszárnyú lepke", latin:"Pieris brassicae", meret:"45-50" },
+ { id:17, magyar:"Réti fészeklepke", latin:"Zographetus hirtus", meret:"50-60" },
+ { id:18, magyar:"Földi lepkék", latin:"Lasiommata megera", meret:"40-50" },
+ { id:19, magyar:"Kerek sávos lepke", latin:"Brenthis daphne", meret:"50-55" },
+ { id:20, magyar:"Mezei lepkék", latin:"Lasiommata maera", meret:"50-55" }
+]

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lepkék</title>
+    <script src="lepkek.js"></script>
+    <style>
+        body{
+            background: khaki;
+        }
+        .container{
+            display: flex;
+            gap: 30px;
+        }
+        .box{
+            border: 1px solid pink;
+            background: lime;
+            border-radius: 5px;
+            color: lightslategrey;
+            
+            width: 500px;
+            height: 400px;
+        }
+        h2{
+            margin: 0px;
+            background: violet;
+            color: yellow;
+            padding: 5px;
+            border: 1px solid salmon;
+        }
+        .form{
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding: 20px;
+        }
+        .form div{
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+        input{
+            width: 200px;
+            text-align: left;
+        }
+        .tabla{
+            overflow-y: scroll;
+            scrollbar-width: thin;
+            max-height: 351px;
+            padding: 5px;
+        }
+        #kozepso{
+            width: 430px;
+        }
+        #kozepso:hover{
+            background: beige;
+            cursor: pointer;
+        }
+        img:hover{
+            cursor: pointer;
+        }
+    </style>
+    <script>
+        function start(){
+            loadList();
+        }
+
+        function loadList(){
+            document.getElementById("ide").innerHTML = ""
+            lepkek.forEach(x => {
+                document.getElementById("ide").innerHTML += 
+                `
+                    <tr>
+                        <td style="width: 30px; text-align: center;"><img src="update.png" alt="" onclick="updatelepke('${x.id}')"></td>
+                        <td id="kozepso" onclick="getInfo('${x.id}')">${x.magyar}</td>
+                        <td style="width: 30px; text-align: center;"><img src="delete.png" alt="" onclick="deleteLepke('${x.id}')"></td>
+                    </tr>
+                `
+            });
+        }
+
+        function postLepke(){
+            let magyar = document.getElementById("nev").value
+            let latin = document.getElementById("latin").value
+            let meret = document.getElementById("meret").value
+
+            if(magyar && latin && meret){
+                
+                lepkek.push({
+                    id: lepkek.length,
+                    magyar:magyar,
+                    latin:latin,
+                    meret:meret
+                })
+
+                loadList()
+            }
+        }
+
+        function deleteLepke(id){
+            let index = lepkek.findIndex(x => x.id == id)
+            lepkek.splice(index, 1)
+            loadList()
+        }
+
+        function updatelepke(id){
+            let magyar = document.getElementById("nev").value
+            let latin = document.getElementById("latin").value
+            let meret = document.getElementById("meret").value
+            
+            let index = lepkek.findIndex(x => x.id == id)
+            
+            lepkek[index] = {
+                id: id,
+                magyar:magyar,
+                latin:latin,
+                meret:meret
+            }
+            /*lepkek[index].magyar = magyar
+            lepkek[index].latin = latin
+            lepkek[index].meret = meret*/
+
+            loadList()
+
+        }
+
+        function getInfo(id){
+            let index = lepkek.findIndex(x => x.id == id)
+
+            document.getElementById("nev").value = lepkek[index].magyar
+            document.getElementById("latin").value = lepkek[index].latin
+            document.getElementById("meret").value = lepkek[index].meret
+        }
+
+    </script>
+</head>
+<body onload="start()">
+    <div class="container">
+        <div class="box">
+            <h2>Lepkék</h2>
+            <div class="tabla">
+                <table id="ide" style="max-height: 351px;">
+                    
+                    
+                </table>
+            </div>
+        </div>
+        <div class="box" style="width: fit-content; height: fit-content;">
+            <h2>Új lepke</h2>
+            <div class="form">
+                <div>
+                    <label for="nev">Magyar:</label>
+                    <input type="text" name="" id="nev" placeholder="Magyar név">
+                </div>
+                <div>
+                    <label for="latin">Latin: </label>
+                    <input type="text" name="" id="latin" placeholder="Latin név">
+                </div>
+                <div>
+                    <label for="meret">Méret: </label>
+                    <input type="text" name="" id="meret" placeholder="Méret">
+                </div>
+                <input type="button" value="Hozzáad" style="width: 150px; text-align: center;" onclick="postLepke()">
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bűvös négyzet</title>
+    <style>
+        body{
+            background: rgb(20, 221, 110);
+        }
+        .container{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            width: 450px;
+            margin: 0px auto;
+            text-align: center;
+        }
+        .box{
+            margin: 0px auto;
+        }
+        .formalatt{
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+        #hianyzo{
+            background: lightgrey;
+            border-radius: 5px;
+            border: 1px solid grey;
+        }
+        #hianyzo:hover{
+            cursor: pointer;
+        }
+        td{
+            width: 60px;
+            height: 60px;
+        }
+        table{
+            border-collapse: collapse;
+        }
+
+        #egy, #ketto, #harom{background: white; border-top: 2px solid black; border-bottom:1px solid grey;}
+        #egy, #negy, #het{background: white; border-left: 2px solid black; border-right: 1px solid grey;}
+        #harom, #hat, #kilenc{background: white; border-right: 2px solid black; border-left: 1px solid grey;}
+        #het, #nyolc, #kilenc{background: white; border-bottom: 2px solid black; border-top: 1px solid gray;}
+        #ot{background: white;}
+
+        td:hover{
+            cursor: pointer;
+        }
+
+        #hianyzo:focus{
+            background: white;
+            border-radius: 0px;
+        }
+        
+    </style>
+    <script>
+        let HianySzam = 0;
+        let jatekId = 0;
+
+        async function newGame(szint){
+            let nev = document.getElementById("nev").value
+            if(nev){
+                let resp = await fetch("http://localhost:88/uj", {
+                    method:"POST",
+                    headers:{"Content-Type":"application/json"},
+                    body: JSON.stringify({nev:nev, szint:szint})
+                })
+                let json = await resp.json()
+                console.log(json);
+                if(!json.error){
+                    let t = json.negyzet
+                    updateCube(t)
+                    let o = json.osszeg
+                    updateosszeg(o)
+                    let h = json.hiany
+                    updateHiany(h)
+                    jatekId = json.id
+                }
+            }
+        }
+
+        function updateCube(negyzet){
+            document.getElementById("egy").innerHTML = negyzet[0]
+            document.getElementById("ketto").innerHTML = negyzet[1]
+            document.getElementById("harom").innerHTML = negyzet[2]
+            document.getElementById("negy").innerHTML = negyzet[3]
+            document.getElementById("ot").innerHTML = negyzet[4]
+            document.getElementById("hat").innerHTML = negyzet[5]
+            document.getElementById("het").innerHTML = negyzet[6]
+            document.getElementById("nyolc").innerHTML = negyzet[7]
+            document.getElementById("kilenc").innerHTML = negyzet[8]
+        }
+
+        function updateosszeg(o){
+            document.getElementById("hiany1").innerHTML = o.s1
+            document.getElementById("hiany2").innerHTML = o.s2
+            document.getElementById("hiany3").innerHTML = o.s3
+            document.getElementById("hiany4").innerHTML = o.a2
+            document.getElementById("hiany5").innerHTML = o.o3
+            document.getElementById("hiany6").innerHTML = o.o2
+            document.getElementById("hiany7").innerHTML = o.o1
+            document.getElementById("hiany8").innerHTML = o.a1
+        }
+
+        function updateHiany(hiany){
+            document.querySelector(".formalatt").innerHTML = ""
+            document.querySelector(".formalatt").innerHTML += "<h3>Hiányzó számok: </h3>"
+            if(hiany.length != 0){
+                hiany.forEach(x => {
+                    document.querySelector(".formalatt").innerHTML += `<input type="button" value="${x}" id="hianyzo" class="h${x}" onclick="storeHiany('${x}')">`
+                });
+            }
+        }
+
+        function storeHiany(szam){
+            HianySzam = szam
+            //console.log(HianySzam);
+        }
+
+        async function changeNumber(index){
+            //console.log(typeof(jatekId));
+            //console.log(typeof(index));
+            //console.log(typeof(HianySzam));
+            
+            let resp = await fetch("http://localhost:88/szam", {
+                method:"PATCH",
+                headers:{"Content-Type":"application/json"},
+                body: JSON.stringify({id:jatekId, szamId: index, szam: Number(HianySzam)})
+            })
+            let json = await resp.json()
+            //console.log(json)
+            if(!json.error){
+                    let t = json.negyzet
+                    updateCube(t)
+                    let o = json.osszeg
+                    updateosszeg(o)
+                    let h = json.hiany
+                    if(h.length > 0){
+                        updateHiany(h)
+                    }else if(json.osszeg.ok == 8){
+                        document.querySelector(".formalatt").innerHTML = "<h3>Nyertél!</h3>"
+                    }else{
+                         document.querySelector(".formalatt").innerHTML = "<h3>Vesztettél!</h3>"
+                    }
+                }
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h3>Minden sor, oszlop és átló összege legyen 15!</h3>
+        <div>
+            <input type="text" name="" id="nev" placeholder="Név" style="width: 100px;">
+            <input type="button" value="1. szint" onclick="newGame(1)">
+            <input type="button" value="2. szint" onclick="newGame(2)">
+            <input type="button" value="3. szint" onclick="newGame(3)">
+        </div>
+        <div class="formalatt">
+            <h3>Hiányzó számok: </h3>
+            <input type="button" value="1" id="hianyzo">
+            <input type="button" value="2" id="hianyzo">
+            <input type="button" value="3" id="hianyzo">
+            <input type="button" value="4" id="hianyzo">
+        </div>
+        <div class="box">
+            <table>
+                <tr>
+                    <td></td>
+                    <td id="egy" onclick="changeNumber(1)">?</td>
+                    <td id="ketto" onclick="changeNumber(2)">?</td>
+                    <td id="harom" onclick="changeNumber(3)">?</td>
+                    <td id="hiany1">?</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td id="negy" onclick="changeNumber(4)">?</td>
+                    <td id="ot" onclick="changeNumber(5)">?</td>
+                    <td id="hat" onclick="changeNumber(6)">?</td>
+                    <td id="hiany2">?</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td id="het" onclick="changeNumber(7)">?</td>
+                    <td id="nyolc" onclick="changeNumber(8)">?</td>
+                    <td id="kilenc" onclick="changeNumber(9)">?</td>
+                    <td id="hiany3">?</td>
+                </tr>
+                <tr>
+                    <td id="hiany8">?</td>
+                    <td id="hiany7">?</td>
+                    <td id="hiany6">?</td>
+                    <td id="hiany5">?</td>
+                    <td id="hiany4">?</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

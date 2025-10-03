@@ -1,0 +1,28 @@
+
+ 1. Hozzunk létre egy express alkalmazást,
+    amit kapcsoljuk a 88-as porthoz, melynek tényleges(!)
+    létrejöttét jelezzük konzolon, vagy írjuk ki a hiba okát!
+    Az alkalmazás kezelje a CORS kéréseket, hogy bárhonnan elérhető legyen!
+ 2. Az API legyen képes felismerni a következő kéréseket:
+    * GET "/" -> adja vissza a "<h1>Bűvös négyzet v1.0.0</h1>" szöveget!
+    * GET "/jatekok" -> adja vissza az eddig létrehozott
+      játékok adatait (id, nev, negyzet) egy objektumtömben!
+    * POST "/uj" -> ellenőrizze, hogy kapott-e "nev" és "szint" adatot,
+      majd vegye fel az objektumtömbbe az új játékot ("id", "nev", "negyzet")!
+      A könnyebb kezelhetőségért a 0. tömbelemet NEM használjuk (értéke 0)!
+      A "szint" értéke (1-3) azt szabályozza,
+      hogy (sorfolytonosan) milyen számok vannak induláskor a négyzetben:
+      1. szint: [ 2, 9, 0, 7, 0, 0, 0, 1, 8 ]
+      2. szint: [ 4, 9, 0, 3, 0, 0, 0, 0, 6 ]
+      3. szint: [ 0, 0, 0, 0, 0, 0, 0, 0, 0 ]
+      Hiba esetén "error" adattagban jelezze a hibát, siker esetén pedig
+      küldje vissza az "id", "negyzet", "hiany" és "osszeg" adatokat!
+      A "hiany" egy tömb, ami a negyzetből hiányzó számokat tartalmazza,
+      az "osszeg" pedig objektum, ami a sorok(.s1-felső/.s2/.s3),
+      az oszlopok(.o1-bal/.o2/.o3) és az átlók(.a1-balalsó/.a2) összegeit
+      tartalmazza, valamint egy .ok számot, hogy közülük hány értéke 15!
+    * PATCH "/szam" -> ellenőrizze, hogy kapott-e "id", "szamId", és "szam"
+      adatot, majd módosítsa a megfelelő négyzet (CSAK az) adott számát!
+      Hiba esetén "error" adattagban jelezze a hibát, siker esetén pedig
+      küldje vissza az "id", "negyzet", "hiany" és "osszeg" adatokat!
+ 3. Teszteljük az elkészült API szolgáltatásait!
