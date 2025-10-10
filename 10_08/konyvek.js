@@ -1,0 +1,22 @@
+export default [
+  { id:1, iro:"George Orwell", cim:"1984", ev:1949 },
+  { id:2, iro:"J.K. Rowling", cim:"Harry Potter and the Chamber of Secrets", ev:1998 },
+  { id:3, iro:"Isaac Asimov", cim:"Foundation", ev:1951 },
+  { id:4, iro:"George Orwell", cim:"Coming Up for Air", ev:1939 },
+  { id:5, iro:"Harper Lee", cim:"To Kill a Mockingbird", ev:1960 },
+  { id:6, iro:"Isaac Asimov", cim:"The End of Eternity", ev:1955 },
+  { id:7, iro:"J.K. Rowling", cim:"Harry Potter and the Sorcerer's Stone", ev:1997 },
+  { id:8, iro:"Harper Lee", cim:"Mockingbird: A Portrait of Harper Lee", ev:2006 },
+  { id:9, iro:"J.K. Rowling", cim:"Harry Potter and the Prisoner of Azkaban", ev:1999 },
+  { id:10, iro:"F. Scott Fitzgerald", cim:"The Great Gatsby", ev:1925 },
+  { id:11, iro:"Mark Twain", cim:"The Adventures of Tom Sawyer", ev:1876 },
+  { id:12, iro:"F. Scott Fitzgerald", cim:"This Side of Paradise", ev:1920 },
+  { id:13, iro:"Mark Twain", cim:"The Adventures of Huckleberry Finn", ev:1884 },
+  { id:14, iro:"George Orwell", cim:"Animal Farm", ev:1945 },
+  { id:15, iro:"J.K. Rowling", cim:"Fantastic Beasts and Where to Find Them", ev:2001 },
+  { id:16, iro:"Mark Twain", cim:"The Prince and the Pauper", ev:1881 },
+  { id:17, iro:"F. Scott Fitzgerald", cim:"Tender is the Night", ev:1934 },
+  { id:18, iro:"Isaac Asimov", cim:"I, Robot", ev:1950 },
+  { id:19, iro:"Harper Lee", cim:"Go Set a Watchman", ev:2015 },
+  { id:20, iro:"Isaac Asimov", cim:"The Gods Themselves", ev:1972 }
+];

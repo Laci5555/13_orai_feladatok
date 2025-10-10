@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Click</title>
+    <style>
+        body {background-color: lightslategray;}
+        #palya {
+            width: 594px; height: 726px;
+            background-color: white;
+            border: 5px solid black;
+            padding: 10px;
+            font-size: 0pt;
+            margin: 0px auto;
+        }
+        #palya img{border: 1px solid white;}
+        #palya img:hover{border: 1px solid lightgrey; cursor: crosshair;}
+        #info{
+            display: flex;
+            justify-content: space-between;
+            width: 594px;
+            margin: 20px auto 0px;
+        }
+        #bal, #jobb, #gyoz{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        #add, #clear, #gyoz{font-size: 24pt; font-weight: bold;}
+    </style>
+    <script>
+        function start(){
+            let html = ""
+            for(let sor = 0; sor<11; sor++){
+                for(let osz=0; osz<9;osz++){
+                    html += `<img src="null.png" id="${sor}x${osz}" onclick="katt(${sor}, ${osz})">`
+                }
+            }
+            document.getElementById("palya").innerHTML = html;
+            setKep(5,4, "add")
+        }
+
+        function setKep(sor, osz, kep){
+            document.getElementById(`${sor}x${osz}`).src = kep + ".png";
+        }
+        let kepek = ["add", "clear"]
+        let addDb = 1; 
+        let clearDb = 0;
+        function katt(sor, osz){
+            let kep = document.getElementById(`${sor}x${osz}`).getAttribute("src");
+            if(kep == "add.png"){
+                for(let dsor = -1; dsor <= 1; dsor++){
+                    for(let dosz = -1; dosz <= 1; dosz++){
+                        let s = sor+dsor;
+                        let o = osz+dosz;
+                        if(s>=0 && s<11 && o>=0 && o<9 && ures(s, o)){
+                            let v = Math.floor(Math.random()*2)
+                            setKep(s, o, kepek[v]);
+                            if(v == 0)  addDb++; else clearDb++;
+                        }
+                    }
+                }
+            } else if(kep == "clear.png"){
+                for(let dsor=-1;dsor<=1;dsor++){
+                    for(let dosz=-1;dosz<=1;dosz++){
+                        let s = sor + dsor;
+                        let o = osz + dosz;
+                        if(s >= 0 && s<11 && o>=0 && o<9){
+                            let mit = document.getElementById(`${s}x${o}`).getAttribute("src");
+                            if(mit == "add.png") addDb--;
+                            else if(mit == "clear.png") clearDb--;
+                            setKep(s, o, "null");
+                        }
+                    }
+                }
+            }
+            document.getElementById("add").innerHTML=addDb;
+            document.getElementById("clear").innerHTML=clearDb;
+            if(addDb + clearDb == 99){
+                document.getElementById("gyoz").innerHTML = "Győztél!";
+            }
+        }
+
+        function ures(sor, osz){
+            return document.getElementById(`${sor}x${osz}`).getAttribute("src") == "null.png";
+        }
+    </script>
+</head>
+<body onload="start()">
+
+    <div id="palya"></div>
+    <div id="info">
+        <div id="bal">
+            <img src="add.png">
+            <span id="add">1</span>
+        </div>
+        <div id="gyoz">?</div>
+        <div id="jobb">
+            <span id="clear">0</span>
+            <img src="clear.png">
+        </div>
+    </div>
+
+</body>
+</html>

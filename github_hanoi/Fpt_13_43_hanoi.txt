@@ -1,0 +1,13 @@
+
+ Szabály: korongot mindig csak NAGYOBB korongra (vagy üres helyre) szabad tenni!
+ Cél: minden korongot áttenni jobboldalra!
+
+ Háttér: blanchedalmond,
+ Téglalap: burlywood,
+ Korongok:
+  [1]  40px #ff0000
+  [2]  70px #ffff00
+  [3] 100px #00ff00
+  [4] 130px #00ffff
+  [5] 160px #0000ff
+ vagy akármilyen...

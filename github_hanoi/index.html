@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hanoi piramis</title>
+    <style>
+        body{ background-color: lightgrey; display: flex; flex-wrap: wrap; align-items: center; flex-direction: column;}
+        .vbox{
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-direction: column;
+        }
+        #asztal{
+            background: burlywood;
+            border: 1px solid black;
+            display: flex;
+            gap: 10px;
+            padding: 10px;
+        }
+        .oszlop{
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            gap: 3px;
+            justify-content: flex-end;
+            background: white;
+            border: 1px solid black;
+            width: 200px;
+            height: 200px;
+            text-align: center;
+            padding: 5px;
+        }
+        input {
+            width: 180px;
+            border: 1px solid grey;
+            border-radius: 5px;
+            height: 30px;
+        }
+        input:hover{
+            box-shadow: 2px 2px 15px grey;
+            cursor: pointer;
+        }
+        .korong{
+            height: 30px;
+            border: 1px solid grey;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 25px;
+            font-weight: bold;
+            text-shadow: -1px -1px 0 grey, 1px -1px 0 grey, -1px 1px 0 grey, 1px 1px 0 grey;
+        }
+        .oszlop:hover{
+            box-shadow: 2px 2px 15px grey;
+            cursor: pointer;
+            color: rgb(238, 231, 231);
+            border: 1px solid rgb(116, 116, 116);
+        }
+        .selected{
+            background: rgb(186, 243, 186);
+            border: 1px solid grey;
+        }
+    </style>
+    <script>
+        let ip = "localhost"
+        function start(){
+            getTorony()
+        }
+        async function getTorony() {
+            let torony = await (await fetch(`http://${ip}:88/torony`)).json()
+            let szinek = ["#ff0000", "#ffff00", "#00ff00", "#00ffff", "#0000ff"]
+            for(let osz = 0; osz<=2;osz++){
+                let html = ""
+                for(let kor=torony[osz].length-1; kor>=0;kor--){
+                    html += `<div class="korong" style="width: ${(torony[osz][kor] * 30) + 10}px; background-color: ${szinek[torony[osz][kor]-1]}">${torony[osz][kor]}</div>`
+                }
+                document.getElementById(`o${osz}`).innerHTML = html
+            }
+        }
+        let elso = true;
+        let honnan = -1;
+        let hova = -1;
+        async function katt(osz){
+            if(elso){
+                honnan = osz
+                document.getElementById(`o${osz}`).classList.add("selected")
+                elso = false;
+            }else{
+                hova = osz;
+                console.log(honnan, " -> ", hova);
+                mozgat(honnan, hova)
+                document.getElementById(`o${honnan}`).classList.remove("selected")
+                elso = true
+                /*if(honnan == hova){
+                    document.getElementById(`o${honnan}`).classList.remove("selected")
+                    elso = true;
+                }else{
+                    let torony = await ( await fetch(`http://${ip}:88/mozgat/${honnan}-${hova}`, {
+                        method:"PATCH",
+                        headers:{"Content-Type":"application/json"}
+                    })).json()
+                    if(!torony.error){
+                        document.getElementById(`o${honnan}`).classList.remove("selected")
+                        let szinek = ["#ff0000", "#ffff00", "#00ff00", "#00ffff", "#0000ff"]
+                        for(let osz = 0; osz<=2;osz++){
+                            let html = ""
+                            for(let kor=torony[osz].length-1; kor>=0;kor--){
+                                html += `<div class="korong" style="width: ${(torony[osz][kor] * 30) + 10}px; background-color: ${szinek[torony[osz][kor]-1]}">${torony[osz][kor]}</div>`
+                            }
+                            document.getElementById(`o${osz}`).innerHTML = html
+                            elso = true;
+                        }
+                    }else{
+                        document.querySelector(".error").innerHTML = torony.error
+                        elso = false
+                    }
+                }*/
+            }
+        }
+        async function mozgat(honnan, hova) {
+            let torony = await ( await fetch(`http://localhost:88/mozgat/${honnan}-${hova}`, {
+                        method:"PATCH",
+                        headers:{"Content-Type":"application/json"}
+            })).json()
+            document.querySelector(".error").innerHTML = torony.error ? torony.error : torony.status
+            getTorony()
+        }
+        function spectator(){
+            ip = document.getElementById("ip").value
+            setInterval(getTorony, 500)
+        }
+
+        async function copy() {
+            let ip = document.getElementById("ip").value
+            let torony = await (await fetch(`http://${ip}:88/torony`)).json()
+            let json = await (await fetch(`http://localhost:88/copy`, {
+                method:"PUT",
+                headers: {"Content-Type":"application/json"},
+                body: JSON.stringify({torony:torony})
+            })).json()
+            document.querySelector(".error").innerHTML = json.error ? json.error : json.status
+            getTorony();
+        }
+    </script>
+</head>
+<body onload="start()">  
+    
+
+    <p>
+        <input type="text" value="localhost" id="ip">
+        <input type="button" value="Spectator" onclick="spectator()">
+        <input type="button" value="Copy" onclick="copy()">
+    </p>
+    <div id="asztal">
+        <div class="vbox">
+            <div id="o0" class="oszlop" onclick="katt(0)"></div>
+            
+        </div>
+        <div class="vbox">
+            <div id="o1" class="oszlop" onclick="katt(1)"></div>
+            
+        </div>
+        <div class="vbox">
+            <div id="o2" class="oszlop" onclick="katt(2)"></div>
+            
+        </div>
+    </div>
+    <p class="error"></p>
+
+</body>
+</html>

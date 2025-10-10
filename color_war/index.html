@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ColorWar</title>
+    <style>
+        body{
+            background: rgb(180, 250, 180);
+        }
+        .hbox{
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+        }
+        .vbox{
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+            flex-direction: column;
+        }
+        #players{
+            width: 150px;
+            background-color: white;
+            border: 2px solid black;
+            padding: 10px;
+        }
+        #players p{
+            margin: 0px;
+        }
+        .mezo{
+            width: 150px;
+        }
+        #level{
+            display: flex;
+            flex-wrap: wrap;
+            width: 930px;
+            background-color: white;
+            border: 2px solid black;
+            padding: 2px;
+        }
+        .elem{
+            width: 29px;
+            height: 29px;
+            border: 1px solid gray;
+            border-radius: 5px;
+        }
+        .elem:hover{
+            border: 1px solid red;
+            cursor: crosshair;
+        }
+        .szin{
+            display: inline-block;
+            width: 29px;
+            height: 29px;
+            border: 1px solid gray;
+            border-radius: 5px;
+        }
+    </style>
+    <script>
+        //let ip = "localhost";
+        let ip = "10.201.2.19"
+        let level = null;
+        let players = null;
+        let id = 0;
+
+        function start(){
+            getPlayers();
+            getLevel();
+            document.getElementById("ip").value = ip
+        }
+
+        async function getPlayers() {
+            players = await (await fetch(`http://${ip}:88/players`)).json()
+            let html = players.map(x => `<p><span class="szin" style="background-color:${x.szin}"></span>"${x.nev} (${x.szin}): ${x.pont}</p>`).join("\n")
+            document.getElementById("players").innerHTML = html 
+        }
+
+        async function getLevel() {
+            level = await (await fetch(`http://${ip}:88/level`)).json()
+            let html = ""
+            for(let sor = 0;sor<30;sor++){
+                for(let osz = 0; osz<30;osz++){
+                    html += `<div class="elem" 
+                    style="background-color:${players[level[sor][osz]].szin}"
+                    onclick="katt(${sor},${osz})"
+                    ></div>`;
+                }
+            }
+            document.getElementById("level").innerHTML = html
+        }   
+
+        async function csatlakozas(){
+            let nev = document.getElementById("nev").value;
+            let szin = document.getElementById("szin").value;
+            ip = document.getElementById("ip").value;
+            let resp = await fetch(`http://${ip}:88/join`, {
+                method:"POST",
+                headers:{"Content-Type":"application/json"},
+                body: JSON.stringify({nev:nev, szin:szin})
+            });
+            let json = await resp.json()
+            if(!json.error){
+                id = json.id
+                await getPlayers();
+                await getLevel();
+                document.getElementById("join").disabled = true;
+                document.getElementById("error").innerHTML = "Csatlakozva"
+                setInterval(frissit, 500)
+            }else document.getElementById("error").innerHTML = json.error
+        }
+        async function katt(sor, osz){
+            let resp = await fetch(`http://${ip}:88/level`, {
+                method:"PATCH",
+                headers:{"Content-Type":"application/json"},
+                body: JSON.stringify({id:id, sor:sor+"", osz:osz+""})
+            });
+            let json = await resp.json()
+            if(!json.error){
+                console.log("nem volt hiba");
+                await getPlayers();
+                await getLevel();
+                document.getElementById("error").innerHTML = " - "
+            }else document.getElementById("error").innerHTML = json.error
+        }
+        async function frissit() {
+            await getPlayers();
+            await getLevel();
+        }
+    </script>
+</head>
+<body onload="start()">
+    
+    <div class="hbox">
+        <div class="vbox">
+            <div id="players"></div>
+            <input id="nev" class="mezo" type="text" value="Laci" placeholder="Név">
+            <input id="szin" class="mezo" type="text" value="#7A5901" placeholder="szin">
+            <input id="ip" class="mezo" type="text" value="" placeholder="ip cím">
+            <input id="join" type="button" value="Csatlakozás" onclick="csatlakozas()">
+        </div>
+        <div class="vbox">
+            <div id="level"></div>
+            <p id="error"></p>
+        </div>
+    </div>
+
+</body>
+</html>

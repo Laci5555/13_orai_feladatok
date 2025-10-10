@@ -1,0 +1,19 @@
+
+ Hozzuk létre a mintán látható webes felületet!
+ 1. A középre igazított játékterület háttere fehér,
+    öt pontos fekete kerettel!
+    Rajta 11 sorban és 19 oszlopban 64x64 képpontos ikonok találhatók,
+    vékony fehér kerettel!
+    Az ikonok körben 10 pixel távolságra vannak a játéktér szélétől!
+    Induláskor a játékterület minden ikonján a null.png legyen,
+    kivéve középen, ahová tegyünk egy add.png ikont!
+    Alul legyen látható melyik ikonból hány darab található a pályán!
+ 2. Az egér alatti (aktuális) kép kerete legyen világosszürke!
+ 3. Kattintáskor:
+    * HA az aktuális ikon az add.png,
+      akkor a körülötte lévő üres helyekre gondoljunk véletlenszerűen ikont!
+    * Ha az aktuális ikon a clear.png,
+      akkor töröljük a körülötte lévő ikonokat és az aktuális ikont is!
+    és frissüljön a darabszám!
+ 4. Ha minden helyet kitöltöttünk a pályán,
+    akkor jelenjen meg a "Győztél!" üzenet a két darabszám között!
