@@ -1,0 +1,9 @@
+1. SELECT osztaly, ofo FROM osztalyok WHERE szakma = "informatika" ORDER BY ofo;
+2. SELECT nev, atlag FROM tanulok ORDER BY szul ASC LIMIT 1;
+3. SELECT osztaly, round(AVG(atlag), 1) FROM osztalyok INNER JOIN tanulok USING(oaz) WHERE osztaly = "13/A";
+4. select month(szul) as "honap", count(nev) as "db" from tanulok GROUP BY honap ORDER BY db DESC
+5. SELECT COUNT(nev) as "letszam",osztaly from osztalyok inner join tanulok using(oaz) GROUP by osztaly ORDER BY letszam DESC
+6. SELECT ofo, nev, atlag from osztalyok inner join tanulok using(oaz) where ofo = "Tóth Péter" ORDER by atlag,nev
+7. SELECT szakma, count(osztaly) from osztalyok GROUP BY szakma
+8. select count(nev) as "db" from tanulok where atlag >= 4.0
+9. /*ez semmiség volt (legyezés)*/
