@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Csigákok</title>
+    <style>
+        body{
+            background-color: lightgreen;
+        }
+        #parent{
+            display: flex;
+        }
+        #scroll{
+            background: white;
+            padding: 10px;
+            border: 1px solid;
+            border-radius: 5px;
+            overflow-y: scroll;
+            scrollbar-width: thin;
+            width: 200px;
+            min-height: 200px;
+            max-height: 200px;
+        }
+        #lista{
+            border: 2px solid grey;
+            border-radius: 5px;
+        }
+        .row{
+            display: grid;
+            grid-template-columns: 1fr 50px 50px;
+        }
+        .row div{
+            padding: 3px 5px;
+            border: 1px solid lightgray;
+        }
+        .row:hover{
+            cursor: pointer;
+            background: beige;
+        }
+        .urlap{
+            background-color: aquamarine;
+            padding: 10px;
+            border: 2px solid grey;
+            border-radius: 5px;
+        }
+        .urlap p{
+            padding: 0px 5px 0px 0px;
+        }
+        .urlap input[type=button]{
+            width: 80px;
+        }
+        .selected{
+            background: rgb(228, 228, 209);
+        }
+    </style>
+    <script>
+        let selected = -1
+        const start = ()=>{
+            getCsigak();
+        }
+        async function getCsigak() {
+            let adat = await(await fetch("http://localhost:88/csigak")).json()
+            document.getElementById("lista").innerHTML = adat.map(x => 
+            `
+                <div class="row" id="${x.id}" onclick="kivalaszt(${x.id}, '${x.nev}', '${x.meret}', '${x.haz}')">
+                    <div>${x.nev}</div>
+                    <div>${x.meret}</div>
+                    <div>${x.haz}</div>
+                </div>
+            `).join("")
+        }
+        async function hozzaad() {
+            let nev = document.getElementById("nev").value
+            let meret = document.getElementById("meret").value
+            let haz = document.getElementById("haz").value
+
+            let resp = await fetch("http://localhost:88/csiga", {
+                method:"POST",
+                headers: {"Content-Type":"application/json"},
+                body: JSON.stringify({nev:nev, meret:meret, haz:haz})
+            })
+            let json = await resp.json()
+            getCsigak();
+        }
+
+        const kivalaszt = async (id, nev, meret, haz)=>{
+            if(selected != -1){
+                document.getElementById(selected).classList.remove("selected")
+            }
+            document.getElementById(id).classList.add("selected")
+            selected = id;
+            
+            let adat = await (await fetch("http://localhost:88/csiga/" + id)).json()
+
+            document.getElementById("nev").value = adat.nev
+            document.getElementById("meret").value = adat.meret
+            document.getElementById("haz").value = adat.haz
+        }
+
+        const torol = async (id)=>{
+            let adat = await (await fetch("http://localhost:88/csiga/" + id, {
+                method:"DELETE",
+                headers: {"Content-Type":"application/json"}
+            })).json()
+        }
+    </script>
+</head>
+<body onload="start()">
+
+    <div id="parent">
+        <div id="scroll">
+            <h3>Csigákok</h3>
+            <div id="lista"></div>
+        </div>
+        <div class="urlap">
+            <p><input id="nev" type="text" placeholder="Név"></p>
+            <p><input id="meret" type="text" placeholder="Méret [cm]"></p>
+            <p><input id="haz" type="text" placeholder="Ház [igen/nem]"></p>
+            <p><input type="button" value="Hozzáad" onclick="hozzaad()"></p>
+            <p><input type="button" value="Töröl" onclick="torol()"></p>
+            <p><input type="button" value="Frissít"></p>
+        </div>
+    </div>
+
+    
+
+</body>
+</html>
