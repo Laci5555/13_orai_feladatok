@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adatok</title>
+    <style>
+        body{
+            background: salmon;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        h1{
+            margin: 0px;
+        }
+        table{
+            background: white;
+            border-collapse: collapse;
+        }
+        tr{
+            display: flex;
+        }
+        tr:hover{
+            cursor: pointer;
+            background: beige;
+        }
+        td{
+            border: 1px solid rgb(247, 102, 102);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2px;
+        }
+        .idk{
+            height: 500px;
+            width: 500px;
+            background: white;
+        }
+        .tabla{
+            max-height: 200px;
+            overflow-y: scroll;
+            scrollbar-width: thin;
+            width: fit-content;
+            background: white;
+            padding: 10px;
+            border: 1px solid;
+        }
+        #dobozka{
+            width: 20px;
+            height: 20px;
+            border: 1px solid;
+            border-radius: 5px;
+        }
+        input{
+            height: 15px;
+        }
+    </style>
+    <script>
+        function start(){
+            getAdat()
+        }
+
+        async function getAdat() {
+            let adat = await (await fetch("http://localhost:88/adatok")).json()
+            let html = adat.map(x => 
+            `
+                <tr onclick="masol(${x.id})">
+                    <td style="width: 30px;" onclick="frissit(${x.id})"><img src="./update.png" alt=""></td>
+                    <td style="width: 200px; justify-content: flex-start;">${x.nev}</td>
+                    <td style="width: 100px; justify-content: flex-end;"">${x.darab}db</td>
+                    <td style="width: 200px; justify-content: flex-start;""><div style="background-color: ${x.szin}" id="dobozka"></div>${x.szin}</td>
+                    <td style="width: 30px;" onclick="torol(${x.id})"><img src="./delete.png" alt=""></td>
+                </tr>
+            `).join("")
+            document.getElementById("ide").innerHTML = html
+        }
+
+        async function post() {
+            let nev = document.getElementById("nev").value
+            let darab = document.getElementById("db").value
+            let szin = document.getElementById("szin").value
+            let resp = await(await fetch("http://localhost:88/adat", {
+                method:"POST",
+                headers:{"Content-Type":"application/json"},
+                body: JSON.stringify({nev:nev, darab:darab, szin:szin})
+            })).json()
+
+            getAdat()
+        }
+
+        async function torol(id) {
+            let resp = await(await fetch("http://localhost:88/adat/"+id, {
+                method:"DELETE",
+                headers:{"Content-Type":"application/json"},
+            })).json()
+
+            getAdat()
+        }
+
+        async function frissit(id) {
+            let nev = document.getElementById("nev").value
+            let darab = document.getElementById("db").value
+            let szin = document.getElementById("szin").value
+            let resp = await(await fetch("http://localhost:88/adat/"+id, {
+                method:"PUT",
+                headers:{"Content-Type":"application/json"},
+                body: JSON.stringify({nev:nev, darab:darab, szin:szin})
+            })).json()
+
+            getAdat()
+        }
+
+        async function masol(id){
+            let adat = await (await fetch("http://localhost:88/adat/"+id)).json()
+            document.getElementById("nev").value = adat.nev
+            document.getElementById("db").value = adat.darab
+            document.getElementById("szin").value = adat.szin
+        }
+
+    </script>
+</head>
+<body onload="start()">
+    <h1>Termékek:</h1>
+    <div class="tabla">
+        <table id="ide">
+            
+        </table>
+    </div>
+    <div class="form">
+        <input type="text" placeholder="Név" id="nev">
+        <input type="text" placeholder="Darab" id="db">
+        <input type="text" placeholder="Szín" id="szin">
+        <button onclick="post()"><img src="./add.png" alt=""></button>
+    </div>
+</body>
+</html>
