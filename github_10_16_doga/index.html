@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Időzónák</title>
+    <style>
+        .body{
+            background-color: lightgreen;
+        }
+        .main{
+            width: 90%;
+            margin: 10px auto;
+        }
+        .also{
+            max-height: 400px;
+            overflow-y: scroll;
+            background: white;
+            border: 2px solid black;
+        }
+        #ide{
+            border-collapse: collapse;
+            background-color: white;
+        }
+        td{
+            border: 1px solid grey;
+            padding: 3px 5px;
+            text-align: center;
+        }
+        #ide tr:hover{
+            cursor: pointer;
+            background: beige;
+        }
+        img:hover{
+            cursor: pointer;
+        }
+        .header{
+            text-align: left;
+            color: white;
+            background: royalblue;
+            border: 2px solid black;
+            font-weight: bold;
+            margin: 0px;
+            padding: 2px;
+        }
+        .felso table{
+            background: skyblue;
+            border-right: 2px solid black;
+            border-left: 2px solid black;
+            border-collapse: collapse;
+        }
+        .felso td{
+            border: 1px solid grey;
+            text-align: center;
+        }
+        input{
+            width: 92%;
+            text-align: center;
+        }
+    </style>
+    <script>
+        function start(){
+            getZonak()
+        }
+
+        async function getZonak() {
+            let zonak = await (await fetch("http://localhost:88/zonak")).json()
+            if(!zonak.error){
+                let html = zonak.map(x => 
+                `
+                    <tr onclick="masol(${x.id})">
+                        <td style="width: 100%; text-align: left;">${x.nev}</td>
+                        <td style="min-width: 100px; max-width: 100px;">${x.rov}</td>
+                        <td style="min-width: 100px; max-width: 100px;">${x.ido}</td>
+                        <td style="min-width: 100px; max-width: 100px;"><img src="./modosit.png" alt="" onclick="Upd(${x.id})"><img src="./torol.png" alt="" style="margin-left: 10px;" onclick="Del(${x.id})"></td>
+                    </tr>
+                `).join("")
+                document.getElementById("ide").innerHTML = html
+                document.querySelector(".header").innerHTML = `Időzónák (${zonak.length} darab)`
+            }else{
+                    document.getElementById("error").innerHTML = zona.error
+            }
+        }
+        
+        let rendezettIdo = false
+        async function RendezIdo() {
+            if(rendezettIdo){
+                getZonak()
+                rendezettIdo = false
+                document.getElementById("rendez_ido").src = "./rendez.png"
+            }else{
+                let zonak = await (await fetch("http://localhost:88/rendez?mezo=ido")).json()
+                if(!zonak.error){
+                    let html = zonak.map(x => 
+                    `
+                        <tr onclick="masol(${x.id})">
+                            <td style="width: 100%; text-align: left;">${x.nev}</td>
+                            <td style="min-width: 100px; max-width: 100px;">${x.rov}</td>
+                            <td style="min-width: 100px; max-width: 100px;">${x.ido}</td>
+                            <td style="min-width: 100px; max-width: 100px;"><img src="./modosit.png" alt="" onclick="Upd(${x.id})"><img src="./torol.png" alt="" style="margin-left: 10px;" onclick="Del(${x.id})"></td>
+                        </tr>
+                    `).join("")
+                    document.getElementById("ide").innerHTML = html
+                    rendezettIdo = true
+                    rendezettRov = false
+                    document.getElementById("rendez_ido").src = "./rendezett.png"
+                    document.getElementById("rendez_rov").src = "./rendez.png"
+                    document.querySelector(".header").innerHTML = `Időzónák (${zonak.length} darab)`
+                }else{
+                    document.getElementById("error").innerHTML = zona.error
+                }
+            }
+        }
+        let rendezettRov = false
+        async function RendezRov() {
+            if(rendezettRov){
+                getZonak()
+                rendezettRov = false
+                document.getElementById("rendez_rov").src = "./rendez.png"
+            }else{
+                let zonak = await (await fetch("http://localhost:88/rendez?mezo=rov")).json()
+                if(!zonak.error){
+                    let html = zonak.map(x => 
+                    `
+                        <tr onclick="masol(${x.id})">
+                            <td style="width: 100%; text-align: left;">${x.nev}</td>
+                            <td style="min-width: 100px; max-width: 100px;">${x.rov}</td>
+                            <td style="min-width: 100px; max-width: 100px;">${x.ido}</td>
+                            <td style="min-width: 100px; max-width: 100px;"><img src="./modosit.png" alt=""  onclick="Upd(${x.id})"><img src="./torol.png" alt="" style="margin-left: 10px;" onclick="Del(${x.id})"></td>
+                        </tr>
+                    `).join("")
+                    document.getElementById("ide").innerHTML = html
+                    rendezettRov = true
+                    rendezettIdo = false
+                    document.getElementById("rendez_rov").src = "./rendezett.png"
+                    document.getElementById("rendez_ido").src = "./rendez.png"
+                    document.querySelector(".header").innerHTML = `Időzónák (${zonak.length} darab)`
+                }else{
+                    document.getElementById("error").innerHTML = zona.error
+                }
+            }
+        }
+
+        async function masol(id) {
+            let zona = await (await fetch("http://localhost:88/zona/" + id)).json()
+            document.getElementById("error").innerHTML = "OK"
+            if(zona.error){
+                document.getElementById("error").innerHTML = zona.error
+            }else {
+                    document.getElementById("nev").value = zona.nev
+                    document.getElementById("rov").value = zona.rov
+                    document.getElementById("ido").value = zona.ido
+            }
+        }
+
+        async function Add() {
+            let nev = document.getElementById("nev").value
+            let rov = document.getElementById("rov").value
+            let ido = document.getElementById("ido").value
+            let zona = await (await fetch("http://localhost:88/zona", {
+                method:"POST",
+                headers:{"Content-Type":"application/json"},
+                body: JSON.stringify({nev:nev, rov:rov, ido:ido})
+            })).json()
+            document.getElementById("error").innerHTML = "OK"
+            if(zona.error){
+                document.getElementById("error").innerHTML = zona.error
+            }else {
+                if(rendezettIdo){
+                    RendezIdo()
+                }else if(rendezettRov){
+                    RendezRov()
+                }else{
+                    getZonak()
+                }
+            }
+        }
+
+        async function Del(id) {
+            let zona = await (await fetch("http://localhost:88/zona/"+id , {
+                method:"DELETE",
+                headers:{"Content-Type":"application/json"}
+            })).json()
+            document.getElementById("error").innerHTML = "OK"
+            if(zona.error){
+                document.getElementById("error").innerHTML = zona.error
+            }else {
+                if(rendezettIdo){
+                    RendezIdo()
+                }else if(rendezettRov){
+                    RendezRov()
+                }else{
+                    getZonak()
+                }
+            }
+        }
+
+        async function Upd(id) {
+            let nev = document.getElementById("nev").value
+            let rov = document.getElementById("rov").value
+            let ido = document.getElementById("ido").value
+            if(nev && rov && ido){
+                let zona = await (await fetch("http://localhost:88/zona", {
+                    method:"PUT",
+                    headers:{"Content-Type":"application/json"},
+                    body: JSON.stringify({id:id, nev:nev, rov:rov, ido:ido})
+                })).json()
+                document.getElementById("error").innerHTML = "OK"
+                if(zona.error){
+                    document.getElementById("error").innerHTML = zona.error
+                }else {
+                    if(rendezettIdo){
+                        RendezIdo()
+                    }else if(rendezettRov){
+                        RendezRov()
+                    }else{
+                        getZonak()
+                    }
+                }
+            }else if(ido){
+                let zona = await (await fetch("http://localhost:88/ido", {
+                    method:"PATCH",
+                    headers:{"Content-Type":"application/json"},
+                    body: JSON.stringify({id:id, ido:ido})
+                })).json()
+                document.getElementById("error").innerHTML = "OK"
+                if(zona.error){
+                    document.getElementById("error").innerHTML = zona.error
+                }else {
+                    if(rendezettIdo){
+                        RendezIdo()
+                    }else if(rendezettRov){
+                        RendezRov()
+                    }else{
+                        getZonak()
+                    }
+                }
+            }else{
+                document.getElementById("error").innerHTML = "Nincs mit módosítani"
+            }
+        }
+    </script>
+</head>
+<body onload="start()">
+    <div class="main">
+        <div class="felso">
+            <h3 class="header">Időzónák (idk darab)</h3>
+            <table>
+                <tr>
+                    <td style="width: 100%; text-align: left;">Név</td>
+                    <td style="min-width: 100px; max-width: 100px;">Rövidítés <img src="./rendez.png" alt="" id="rendez_rov" onclick="RendezRov()"></td>
+                    <td style="min-width: 100px; max-width: 100px;">Idő <img src="./rendez.png" alt="" id="rendez_ido" onclick="RendezIdo()"></td>
+                    <td style="min-width: 100px; max-width: 100px;"> Művelet</td>
+                    <td style="min-width: 7px; max-width: 7px;"></td>
+                </tr>
+                <tr>
+                    <td style="min-width: 100%;"><input type="text" placeholder="Időzóna neve" style="text-align: left; width: 99%;" id="nev"></td>
+                    <td style="min-width: 100px; max-width: 100px;"><input type="text" placeholder="Rövidítés" id="rov"></td>
+                    <td style="min-width: 100px; max-width: 100px;"><input type="text" placeholder="Idő" id="ido"></td>
+                    <td style="min-width: 100px; max-width: 100px;" onclick="Add()"><img src="./hozzaad.png" alt=""></td>
+                    <td style="min-width: 7px; max-width: 7px;"></td>
+                </tr>
+            </table>
+        </div>
+        <div class="also">
+            <table id="ide">
+                <tr>
+                    <td style="width: 100%;"></td>
+                    <td style="width: 100px;"></td>
+                    <td style="width: 100px;"></td>
+                    <td style="width: 100px;"></td>
+                </tr>
+            </table>
+        </div>
+        <p id="error"></p>
+    </div>
+</body>
+</html>
