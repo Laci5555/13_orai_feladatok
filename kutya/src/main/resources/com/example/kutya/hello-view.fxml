@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.kutya.HelloController">
+   <children>
+      <MenuBar>
+        <menus>
+          <Menu mnemonicParsing="false" text="Fájl">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Megnyitás" />
+                  <MenuItem mnemonicParsing="false" text="Mentés" />
+                  <MenuItem mnemonicParsing="false" text="Kilépés" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Gazdi">
+               <items>
+                  <RadioMenuItem mnemonicParsing="false" text="Fiú" />
+                  <RadioMenuItem mnemonicParsing="false" text="Lány" />
+                  <RadioMenuItem mnemonicParsing="false" text="Apu" />
+                  <RadioMenuItem mnemonicParsing="false" text="Troll" />
+                  <RadioMenuItem mnemonicParsing="false" text="Boszi" />
+               </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Súgó">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Névjegy" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+      <HBox>
+         <children>
+            <Pane fx:id="pnJatek" onMouseMoved="#MouseMoved" prefHeight="600.0" prefWidth="600.0" style="-fx-background-color: lightgreen; -fx-border-color: black;">
+               <children>
+                  <ImageView fx:id="gazdi" fitHeight="64.0" fitWidth="64.0" layoutX="300.0" layoutY="300.0" pickOnBounds="true" preserveRatio="true" translateX="-32.0" translateY="-32.0">
+                     <image>
+                        <Image url="@gazdi/fiu.png" />
+                     </image>
+                  </ImageView>
+                  <Circle fx:id="circle" centerX="300.0" centerY="300.0" fill="#1f93ff00" radius="60.0" stroke="#66cc66" strokeType="INSIDE" />
+                  <Label fx:id="lbTimer" layoutX="14.0" layoutY="6.0" />
+               </children></Pane>
+            <VBox spacing="10.0">
+               <children>
+                  <ImageView fitHeight="32.0" fitWidth="32.0" onMousePressed="#onKutyaClick" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@kutyus/kutyus.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="32.0" fitWidth="32.0" onMousePressed="#onKutya2Click" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@kutyus/capa.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="32.0" fitWidth="32.0" onMousePressed="#onKutya3Click" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@kutyus/pingvin.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="32.0" fitWidth="32.0" onMousePressed="#onKutya4Click" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@kutyus/rak.png" />
+                     </image>
+                  </ImageView>
+               </children>
+               <padding>
+                  <Insets bottom="10.0" left="20.0" right="10.0" top="10.0" />
+               </padding>
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+            </VBox>
+         </children>
+         <padding>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </padding>
+      </HBox>
+   </children>
+</VBox>

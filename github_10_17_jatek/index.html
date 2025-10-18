@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ember v1.0.0</title>
+    <style>
+        body{background-color: aliceblue;}
+        .vbox{
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+            flex-direction: column;
+            margin: 0px auto 50px;
+            width: fit-content;
+        }
+        .hbox{
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-direction: column;
+        }
+        .hbox2{
+            display: flex;
+            gap: 275px;
+            margin-left: 50px;
+            align-items: flex-start;
+            width: fit-content;
+        }
+        #nev, #ip, #con{
+            height: 35px;
+        }
+        .selected{
+            background: lightgreen;
+            border: 1px solid black !important;
+            border-radius: 5px;
+        }
+        #avatars img{
+            padding: 2px;
+            border: 1px solid aliceblue;
+        }
+        #avatars img:hover{
+            cursor: pointer;
+            border: 1px solid;
+            border-radius: 5px;
+        }
+        #players{
+            width: 192px;
+            background: antiquewhite;
+            border: 1px solid;
+            border-radius: 5px;
+            padding: 10px;
+        }
+        #vaszon{
+            background: white;
+            border: 1px solid;
+            border-radius: 10px;
+        }
+        .vmiddle{
+            align-items: center;
+        }
+        .player{
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .player:hover{
+            background: blanchedalmond;
+            cursor: pointer;
+        }
+    </style>
+    <script>
+        function start(){
+            rajzol()
+        }
+        function rajzol(){
+            let rajz = document.getElementById("vaszon").getContext("2d");
+            rajz.fillStyle = "white";
+            rajz.fillRect(0, 0, 788, 596)
+            rajz.strokeStyle = "lightgrey";
+            for(let osz = 0; osz<=12; osz++) vonal(rajz, 10+osz*64, 10+0, 10+osz*64, 10+576);
+            for(let sor = 0; sor<=9; sor++) vonal(rajz, 10+0, 10+sor*64, 10+768, 10+sor*64);
+            if(level != null){
+                let box = document.getElementById("box");
+                for(let sor = 0; sor<9;sor++){
+                    for(let osz=0; osz<12;osz++){
+                        if(level[sor].charAt(osz) == 'B') rajz.drawImage(box, 10+osz*64, 10+sor*64)
+                    }
+               }
+            }
+            if(players != null){
+                for(let p of players){
+                    console.log(p.avatar);
+                    let kep = document.getElementById(p.avatar);
+                    rajz.drawImage(kep, 10+p.osz*64, 10+p.sor*64);
+                }
+            }
+        }
+        function vonal(rajz, x1, y1, x2, y2){
+            rajz.beginPath();
+            rajz.moveTo(x1, y1)
+            rajz.lineTo(x2, y2)
+            rajz.stroke();
+        }
+
+        let id = -1;
+        let selected = "pirate"
+        let ip = "localhost"
+        let nev = "nem Laci"
+        let level = null;
+        let players = null;
+        function ember(id){
+            document.getElementById(selected).setAttribute("class", "")
+            selected = id
+            document.getElementById(selected).setAttribute("class", "selected")
+        }
+
+        async function connect() {
+            nev = document.getElementById("nev").value
+            ip = document.getElementById("ip").value
+            let json = await (await fetch(`http://${ip}:88/connect`, {
+                method:"POST",
+                headers:{"Content-Type":"application/json"},
+                body: JSON.stringify({nev:nev, avatar:selected})
+            })).json()
+            if(json.error){console.log(json.error); }
+            else{
+                id = json.id
+                console.log("id: ", json.id);
+                await getLevel();
+                await getPlayers();
+                setInterval(refresh, 100);
+            }
+        }
+        async function refresh() {
+            await getPlayers();
+            rajzol();
+        }
+        async function getLevel() {
+            level = await (await fetch(`http://${ip}:88/level`)).json()
+            console.log(ip);
+        }
+        async function getPlayers() {
+            players = await (await fetch(`http://${ip}:88/players`)).json()
+            document.getElementById("players").innerHTML = players.map((x, i) => {
+                if(i > 0) return`
+                <div class="player${x.ban ? " ban" : ""}" onclick="banPlayer('${x.ip}')">
+                    <p>${x.nev}:${x.pont}</p> <img src="${x.avatar}.png">
+                </div>
+            `}).join("\n");
+        }
+        async function banPlayer(ip) {
+            let resp = await fetch0 (`http://${ip}:88/ban/${ip}`, {
+                method:"PATCH"
+            })
+            let json = await resp.json()
+            
+        }
+        async function gomb(){
+            let g = event.key;
+            if(g=='w' || g=='s' || g=='a' || g=='d') {
+                // /move/:id/:key
+                let resp = await fetch(`http://${ip}:88/move/${id}/${g}`, {
+                    method:"PATCH"
+                })
+                let json = await resp.json();
+                await getPlayers();
+                rajzol();
+            }
+        }
+    </script>
+</head>
+<body onload="start()" onkeydown="gomb()">
+    
+    <div class="vbox">
+        <div class="hbox">
+            <div>
+                <input type="text" value="Laci" id="nev" placeholder="Név">
+                <input type="text" value="localhost" id="ip" placeholder="Szerver">
+            </div>
+            <div id="avatars">
+                <img id="man" src="man.png" onclick="ember('man')">
+                <img id="police"  src="police.png" onclick="ember('police')">
+                <img id="zombie"  src="zombie.png" onclick="ember('zombie')">
+                <img id="shero"  src="shero.png" onclick="ember('shero')">
+                <img id="pirate"  src="pirate.png" class="selected" onclick="ember('pirate')">
+                <img id="doctor"  src="doctor.png" onclick="ember('doctor')">
+            </div>
+            <input type="button" value="Csatlakozás" id="con" onclick="connect()">
+        </div>
+    </div>
+    <div class="hbox2">
+        <div id="players"></div>
+        <canvas id="vaszon" width="788px" height="596px">Hoppá!</canvas>
+    </div>
+
+    <div style="display:none;">
+        <img id="box" src="Mines icon icon.png" alt="">
+        <img id="star" src="star.png" alt="">
+    </div>
+
+</body>
+</html>
