@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sajtolás</title>
+    <style>
+        body{ background-color: bisque;}
+        #jatek{
+            width: 768px;
+            height: 576px;
+            margin: 0px auto;
+            background-color: white;
+            border: 1px solid;
+            padding: 10px;
+            font-size: 0px;
+        }
+        #info{
+            width: 768px;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            margin: 0px auto;
+            font-size: 16pt;
+            font-weight: bold;
+        }
+        .vkozep{
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+    </style>
+    <script>
+        let t = [];
+        let db = 0;
+        let msor = 0, mosz = 0;
+        let ido = 100;
+        let timer1 = null;
+        let timer2 = null;
+        const start = ()=>{
+            let html = "";
+            for(let sor=0;sor<12;sor++){
+                t[sor] = []
+                for(let osz=0;osz<16;osz++){
+                    html += `<img id="${sor}x${osz}" src="null.png">`;  
+                    t[sor][osz] = "null";
+                }
+            }
+            document.getElementById("jatek").innerHTML = html
+            gondolSajt();
+            gondolEger();
+            timer1 = setInterval(idozito, 1000);
+            timer2 = setInterval(gravitacio, 250)
+        }
+        const idozito = ()=>{
+            ido--;
+            document.getElementById("ido").innerHTML = ido
+        }
+        const gravitacio = ()=>{
+            for(let sor=10;sor>=0;sor--){
+                for(let osz=0;osz<16;osz++){
+                    if(t[sor][osz] == "bomb"){
+                        if(t[sor+1][osz] == "null"){
+                            setKep(sor, osz, "null");
+                            setKep(sor+1, osz, "bomb")
+                        }
+                    }
+                }
+            }
+        }
+        const gondolSajt = ()=>{
+            for(let sor=0;sor<12;sor++){
+                for(let osz=0;osz<16;osz++){
+                    let kep = "bomb"
+                    if(Math.random() > 0.25) {kep = "sajt", db++}
+                    setKep(sor, osz, kep)
+                }
+            }
+            document.getElementById("db").innerHTML = db;
+        }
+        const gondolEger = ()=>{
+            msor = Math.floor(Math.random()*12)
+            mosz = Math.floor(Math.random()*16)
+            if( t[msor][mosz] == "sajt"){
+                db--; 
+                document.getElementById("db").innerHTML = db;
+            }
+            setKep(msor, mosz, "eger")
+        }
+        function setKep(sor, osz, kep){
+            document.getElementById(`${sor}x${osz}`).src = kep + ".png";
+            t[sor][osz] = kep;
+        }
+        const gomb = ()=>{
+            let g = event.key;
+            setKep(msor, mosz, "null");
+            if(g == "w" && msor > 0 && t[msor-1][mosz] != "bomb") msor--;
+            if(g == "s" && msor < 11 && t[msor+1][mosz] != "bomb") msor++;
+            if(g == "a" && mosz > 0 && t[msor][mosz-1] != "bomb") mosz--;
+            if(g == "d" && mosz < 15 && t[msor][mosz+1] != "bomb") mosz++;
+            if(t[msor][mosz] == "sajt"){
+                db--;
+                document.getElementById("db").innerHTML = db;
+                if(db == 0){
+                    document.getElementById("txt").innerHTML = "Győztél!";
+                    clearInterval(timer1)
+                    clearInterval(timer2)
+                }
+            }
+            setKep(msor, mosz, "eger")
+        }
+    </script>
+</head>
+<body onload="start()" onkeydown="gomb()">
+    
+    <div id="jatek"></div>
+    <div id="info">
+        <div class="vkozep">
+            <img src="sajt.png" alt="">
+            <span id="db">8</span>
+        </div>
+        <p id="txt">Edd meg a sajtokat!</p>
+        <div class="vkozep">
+            <span id="ido">100</span>
+            <img src="hour.png" alt="">
+        </div>
+    </div>
+
+</body>
+</html>
