@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.uthajo.HelloController">
+   <children>
+      <Pane fx:id="ur" onKeyPressed="#Restart" onMouseMoved="#Move" prefHeight="600.0" prefWidth="800.0" style="-fx-border-color: black; -fx-background-color: #333399;">
+         <children>
+            <Label fx:id="highscore" layoutX="14.0" layoutY="14.0" text="0" textFill="WHITE" />
+            <ImageView fx:id="hajo" fitHeight="72.0" fitWidth="72.0" layoutX="100.0" layoutY="300.0" pickOnBounds="true" preserveRatio="true" rotate="-90.0" translateX="-36.0" translateY="-36.0">
+               <image>
+                  <Image url="@urhajo.png" />
+               </image>
+            </ImageView>
+         </children>
+         <cursor>
+            <Cursor fx:constant="NONE" />
+         </cursor>
+      </Pane>
+   </children>
+</VBox>
