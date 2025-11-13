@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ertelemszeru.HelloController">
+   <children>
+      <HBox>
+         <children>
+            <ComboBox fx:id="felado" prefWidth="200.0" />
+            <ComboBox fx:id="cimzett" prefWidth="200.0" />
+            <TextField fx:id="idopont" prefWidth="100.0" />
+            <TextField fx:id="hossz" prefWidth="100.0" />
+         </children>
+      </HBox>
+      <HBox spacing="10.0">
+         <children>
+            <ImageView fitHeight="45.0" fitWidth="45.0" onMousePressed="#addSor" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@insert.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="45.0" fitWidth="45.0" onMousePressed="#Update" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@update.png" />
+               </image>
+            </ImageView>
+            <Label maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
+            <ImageView fitHeight="45.0" fitWidth="45.0" onMousePressed="#deleteSor" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@delete.png" />
+               </image>
+            </ImageView>
+         </children>
+      </HBox>
+      <TableView fx:id="tabla" onMousePressed="#Select">
+        <columns>
+           <TableColumn fx:id="feladoCol" prefWidth="200" text="Feladó" />
+           <TableColumn fx:id="cimzettCol" prefWidth="200" text="Címzett" />
+           <TableColumn fx:id="idopontCol" prefWidth="100" text="Időpont" />
+           <TableColumn fx:id="hosszCol" prefWidth="100" text="Hossz" />
+        </columns>
+      </TableView>
+   </children>
+   <padding>
+      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+   </padding>
+</VBox>
