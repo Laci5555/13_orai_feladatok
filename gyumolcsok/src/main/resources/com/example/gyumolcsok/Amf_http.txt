@@ -1,0 +1,32 @@
+
+--- API GET ---
+
+ * src/main/java/module-info.java:
+   requires java.net.http;
+
+ * String uri = "http://localhost:88/get"; // Ezt akarjuk elkérni
+   HttpClient client = HttpClient.newHttpClient();
+   HttpRequest request = HttpRequest.newBuilder().uri(new URI(uri)).build();
+   HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+   String jsonString = response.body(); // Ez a válasz, csak Stringben! Konvertálni KELL
+
+--- JSON ---
+
+ * pom-xml:
+   <dependency>
+     <groupId>com.google.code.gson</groupId>
+     <artifactId>gson</artifactId>
+     <version>2.11.0</version>
+   </dependency>
+   
+ * src/main/java/module-info.java:
+   requires com.google.gson;
+
+ * public class Adat {
+	public long id;
+	public String name;
+   }
+   
+   String jsonString = new Gson().toJson(adat); // Objektumból csinál Stringet
+   Adat adat = new Gson().fromJson(jsonString, Adat.class); // Stringből csinál Objektumot (KELL osztály!)
+   Adat[] adatok = new Gson().fromJson(jsonString, Adat[].class); // Stringből csinál Objektumtömböt (KELL osztály!)
