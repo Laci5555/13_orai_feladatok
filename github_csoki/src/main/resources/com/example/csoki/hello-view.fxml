@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<HBox xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.csoki.HelloController">
+   <children>
+      <VBox alignment="TOP_CENTER" spacing="5.0">
+         <children>
+            <ImageView fitHeight="36.0" fitWidth="36.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@csokik.png" />
+               </image></ImageView>
+            <Label prefHeight="60.0" VBox.vgrow="ALWAYS" />
+            <ImageView fitHeight="36.0" fitWidth="36.0" onMouseClicked="#add" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@add.png" />
+               </image>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor></ImageView>
+            <ImageView fitHeight="36.0" fitWidth="36.0" onMouseClicked="#upd" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@upd.png" />
+               </image>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor></ImageView>
+            <ImageView fitHeight="36.0" fitWidth="36.0" onMouseClicked="#del" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@del.png" />
+               </image>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor></ImageView>
+         </children>
+         <padding>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </padding>
+      </VBox>
+      <VBox spacing="10.0">
+         <children>
+            <HBox alignment="CENTER_LEFT">
+               <children>
+                  <TextField fx:id="nev" prefWidth="250.0">
+                     <cursor>
+                        <Cursor fx:constant="TEXT" />
+                     </cursor></TextField>
+                  <TextField fx:id="suly" prefWidth="100.0">
+                     <cursor>
+                        <Cursor fx:constant="TEXT" />
+                     </cursor></TextField>
+                  <TextField fx:id="kcal" prefWidth="100.0">
+                     <cursor>
+                        <Cursor fx:constant="TEXT" />
+                     </cursor></TextField>
+               </children>
+            </HBox>
+            <TableView fx:id="tabla">
+              <columns>
+                <TableColumn fx:id="colnev" minWidth="250.0" prefWidth="75.0" text="Név" />
+                <TableColumn fx:id="colsuly" minWidth="100.0" prefWidth="75.0" text="Súly" />
+                  <TableColumn fx:id="colkcal" minWidth="100.0" prefWidth="75.0" text="Kalória" />
+              </columns>
+            </TableView>
+         </children>
+         <padding>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </padding>
+      </VBox>
+   </children>
+</HBox>
