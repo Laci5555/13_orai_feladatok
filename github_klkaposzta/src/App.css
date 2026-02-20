@@ -1,0 +1,68 @@
+*{
+  box-sizing: border-box;
+  margin: 0;
+}
+
+body{
+  background: darkseagreen;
+}
+
+.app{
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.adat{
+  display: flex;
+  gap: 20px;
+  background: white;
+  width: 90%;
+  margin-top: 10px;
+  border-radius: 10px;
+  border: 1px solid;
+  padding: 10px;
+}
+
+.text, .gomb{
+  width: 70px;
+  border-radius: 5px;
+  border: 1px solid grey;
+  text-align: center;
+}
+
+.diagram{
+  background: white;
+  border: 1px solid;
+  border-radius: 10px;
+  padding: 10px;
+  width: 90%;
+  height: 120px;
+  max-width: 90%;
+  overflow-x: scroll;
+  scrollbar-width: none;
+  display: flex;
+}
+
+.belso{
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  gap: 10px;
+  border-bottom: 2px solid;
+  padding: 0px 10px;
+}
+
+.ertek{
+  border: 1px solid;
+  border-bottom: none;
+  background: lightgreen;
+  border-radius: 5px 5px 0px 0px;
+  padding: 5px 10px 20px 10px;
+}
+.ertek:hover{
+  cursor: pointer;
+  background: darksalmon;
+}
