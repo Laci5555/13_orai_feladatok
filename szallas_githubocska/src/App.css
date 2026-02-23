@@ -1,0 +1,75 @@
+*{
+  box-sizing: border-box;
+  margin: 0;
+}
+
+body{
+  background: darkkhaki;
+}
+
+.app{
+  width: 90%;
+  margin: 0 auto;
+}
+
+.fejlec{
+  height: 200px;
+  padding: 20px;
+  border: 1px solid;
+  border-radius: 20px;
+  box-shadow: 0px 0px 10px white;
+  background-image: url("/public/szallas.jpg");
+  background-position: center;
+  background-size: cover;
+  font-size: 26pt;
+  color: white;
+  text-shadow: 2px 2px 2px black;
+  margin-top: 20px;
+  display: flex;
+  align-items: flex-end;
+}
+
+.doboz{
+  background: white;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0px 0px 10px white;
+  margin-top: 20px;
+}
+
+.foglal{
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+#ejszaka{
+  width: 60px;
+  height: 30px;
+  border-radius: 5px;
+  text-align: center;
+  scrollbar-width: none;
+  border: 1px solid;
+}
+
+.gomb{
+  width: 60px;
+  height: 30px;
+  border-radius: 5px;
+  border: 1px solid;
+}
+
+.sor{
+  padding: 5px;
+}
+
+.sor:hover{
+  cursor: pointer;
+  background: beige;
+}
+
+input::-webkit-inner-spin-button {
+    /* display: none; <- Crashes Chrome on hover */
+    -webkit-appearance: none;
+    margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
