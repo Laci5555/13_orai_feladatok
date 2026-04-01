@@ -1,0 +1,37 @@
+*{
+  margin: 0;
+}
+
+body{
+  background-image: linear-gradient(orange, red);
+  background-attachment: fixed;
+}
+
+.app{
+  width: 90%;
+}
+
+.palya{
+  background: white;
+  border-radius: 10px;
+  border: 1px solid grey;
+  padding: 10px;
+  width: 880px;
+  margin: 20px auto;
+}
+
+.palya img{
+  width: 72px;
+  height: 72px;
+  padding: 4px;
+  border-radius: 5px;
+}
+.palya img:hover{
+  background: lightgrey;
+  cursor: pointer;
+}
+
+.palya img.selected{
+  border: 1px solid red;
+  padding: 3px;
+}
